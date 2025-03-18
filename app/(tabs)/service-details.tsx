@@ -15,7 +15,7 @@ const serviceInfo = {
     backText: "Back",
   },
   heroImage: {
-    source: require("@/assets/images/photo_1.jpeg"),
+    source: require("@/assets/images/photo_1.jpg"),
     alt: "Veterinary services",
   },
   servicesTitle: {

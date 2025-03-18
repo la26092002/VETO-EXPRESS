@@ -29,7 +29,7 @@ export default function WelcomeScreen() {
           </Text>
         </View>
         <Image
-          source={require("@/assets/images/photo_6.jpeg")}
+          source={require("@/assets/images/photo_6.png")}
           className="h-32 w-32 object-contain"
         />
 

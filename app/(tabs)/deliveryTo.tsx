@@ -80,7 +80,7 @@ export default function HomeScreen() {
       rating: "4.5",
       time: "25min",
       freeDelivery: true,
-      image: require("@/assets/images/photo_1.jpeg"),
+      image: require("@/assets/images/photo_1.jpg"),
     },
     {
       id: "2",
@@ -89,7 +89,7 @@ export default function HomeScreen() {
       rating: "4.5",
       time: "25min",
       freeDelivery: true,
-      image: require("@/assets/images/photo_2.jpeg"),
+      image: require("@/assets/images/photo_2.jpg"),
     },
     {
       id: "3",
@@ -98,7 +98,7 @@ export default function HomeScreen() {
       rating: "4.5",
       time: "25min",
       freeDelivery: true,
-      image: require("@/assets/images/photo_3.jpeg"),
+      image: require("@/assets/images/photo_3.jpg"),
     },
     {
       id: "4",
@@ -107,7 +107,7 @@ export default function HomeScreen() {
       rating: "4.5",
       time: "25min",
       freeDelivery: true,
-      image: require("@/assets/images/photo_4.jpeg"),
+      image: require("@/assets/images/photo_4.jpg"),
     },
     {
       id: "5",
@@ -116,7 +116,7 @@ export default function HomeScreen() {
       rating: "4.5",
       time: "25min",
       freeDelivery: true,
-      image: require("@/assets/images/photo_5.jpeg"),
+      image: require("@/assets/images/photo_5.jpg"),
     },
   ];
 
@@ -190,7 +190,7 @@ export default function HomeScreen() {
         {/* Main Banner Image */}
         <View className="mx-5 my-4">
           <Image
-            source={require("@/assets/images/header.png")} // Replace with actual image
+            source={require("@/assets/images/header.jpg")} // Replace with actual image
             className="w-full h-40 rounded-lg"
             resizeMode="cover"
           />

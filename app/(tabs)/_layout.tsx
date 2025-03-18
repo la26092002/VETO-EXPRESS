@@ -214,7 +214,8 @@ export default function TabLayout() {
           ),
         }}
       />
-      <Tabs.Screen
+      {/* comment me  */}
+      {/* <Tabs.Screen
         name="service"
         options={{
           href: null, // This prevents the tab from showing in the tab bar
@@ -234,7 +235,7 @@ export default function TabLayout() {
           href: null, // This prevents the tab from showing in the tab bar
           // Alternatively, you can use `headerShown: false` if you want to hide just the header
         }}
-      />
+      /> */}
     </Tabs>
   );
 }

@@ -179,7 +179,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="deliveryTo"
         options={{
           title: "Home",
           tabBarIcon: ({ color, focused }) => (
@@ -197,7 +197,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="deliveryTo"
+        name="deliveryToo"
         options={{
           title: "Orders",
           tabBarIcon: ({ color, focused }) => (

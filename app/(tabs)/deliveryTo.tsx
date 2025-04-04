@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,14 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {} from "react-native-svg";
 import BannerSvgComponent from "@/components/banner";
+import { useDataContext } from "@/context/DataContext";
 export default function HomeScreen() {
+
+  const { state, dispatch } = useDataContext();
+  useEffect(() => {
+    console.log(state.user)
+  }, [])
+  
   // Delivery partners data
   const deliveryPartners = [
     {

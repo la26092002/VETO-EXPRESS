@@ -12,6 +12,7 @@ import "react-native-reanimated";
 import "../global.css";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
+import { DataProvider } from "@/context/DataContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -35,18 +36,21 @@ export default function RootLayout() {
   }
 
   return (
+
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="createAccount" options={{ headerShown: false }} />
-      <Stack.Screen name="login" options={{ headerShown: false }} />
-      <Stack.Screen name="forgetPassword" options={{ headerShown: false }} />
-      <Stack.Screen name="verifyCode" options={{ headerShown: false }} />
-      <Stack.Screen name="validateAccount" options={{ headerShown: false }} />
-      
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
+      <DataProvider>
+        <Stack>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="createAccount" options={{ headerShown: false }} />
+          <Stack.Screen name="login" options={{ headerShown: false }} />
+          <Stack.Screen name="forgetPassword" options={{ headerShown: false }} />
+          <Stack.Screen name="verifyCode" options={{ headerShown: false }} />
+          <Stack.Screen name="validateAccount" options={{ headerShown: false }} />
+
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+      </DataProvider>
       <StatusBar style="auto" />
     </ThemeProvider>
   );

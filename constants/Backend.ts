@@ -52,11 +52,9 @@ export const API = Object.freeze({
     BASE_URL: "http://192.168.1.12:3000",
     LOGIN: "/api/auth/login",
     REGISTER: "/api/auth/register",
-    GET_USER: "/user/profile",
-    UPDATE_USER: "/user/update",
-    GET_PRODUCTS: "/products",
-    GET_ORDERS: "/orders",
-    CREATE_ORDER: "/orders/create"
+    GET_DOCTORS: "/api/client/getDocteurs",
+    GET_VENDEURS: "/api/client/getVendeurs",
+    GET_USER: "/api/auth/me"
 } as const);
 
 export type {

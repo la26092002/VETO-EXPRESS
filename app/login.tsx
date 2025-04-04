@@ -6,10 +6,15 @@ import {
     TouchableOpacity,
     StatusBar,
     Image,
+    Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { API } from "@/constants/Backend";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useDataContext } from "@/context/DataContext";
+
 
 export default function LoginScreen() {
     // State for form inputs
@@ -17,9 +22,98 @@ export default function LoginScreen() {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
+    const [isLoading, setIsLoading] = useState(false); // State for loading
+
+    const { state, dispatch } = useDataContext();
+
     // Toggle password visibility
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
+    };
+
+    // Handle registration
+    const handleLogin = async () => {
+        if (!email || !password) {
+            Alert.alert("Error", "All fields are required.");
+            return;
+        }
+
+        setIsLoading(true);
+        try {
+            const user = {
+                email: email,
+                password: password,
+            };
+
+            console.log(user)
+            const response = await fetch(`${API.BASE_URL}${API.LOGIN}`, { // Replace with your actual API endpoint
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(user),
+            });
+
+            const data = await response.json();
+
+            console.log(data)
+            if (!response.ok) {
+                if (response.status === 400 && data.message === 'Email already in use') {
+                    Alert.alert("Registration Failed", "This email is already registered. Please use a different email or login.");
+                    await AsyncStorage.setItem('emailValidate', user.email);
+                    // Navigate to validation screen or home
+                    router.navigate("/login");
+                } else {
+                    Alert.alert("Login Failed", data.message || "Login failed. Please try again.");
+                }
+                return;
+            }
+
+            if (data.user.isValidate) {
+                if (data.user.typeActeur === "Client") {
+                    await AsyncStorage.setItem('userToken', data.token);
+
+                    // Setup headers with the token
+                    const headers = {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${data.token}`,
+                    };
+
+                    // Perform the API requests in parallel
+                    const [userRes, doctorsRes, vendeursRes] = await Promise.all([
+                        fetch(`${API.BASE_URL}${API.GET_USER}`, { headers }),
+                        fetch(`${API.BASE_URL}${API.GET_DOCTORS}`, { headers }),
+                        fetch(`${API.BASE_URL}${API.GET_VENDEURS}`, { headers }),
+                    ]);
+                    const userData = await userRes.json();
+                    const doctorsData = await doctorsRes.json();
+                    const vendeursData = await vendeursRes.json();
+
+                    dispatch({ type: "SET_USER", payload: userData });
+                    dispatch({ type: "SET_DOCTORS", payload: doctorsData });
+                    dispatch({ type: "SET_VENDEURS", payload: vendeursData });
+
+
+                    router.navigate("/deliveryTo");
+                } else {
+                    Alert.alert(data.user.typeActeur, "this user just supported on web app service.");
+                }
+            } else {
+                Alert.alert("Login Not Complicated", "Validate your account.");
+
+                await AsyncStorage.setItem('emailValidate', user.email);
+                // Navigate to validation screen or home
+                router.navigate("/validateAccount");
+            }
+            // Success case
+
+
+        } catch (error) {
+            console.error('Registration error:', error);
+            Alert.alert("Registration Failed", "Network error. Please check your connection and try again.");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -77,7 +171,9 @@ export default function LoginScreen() {
                 </View>
 
                 {/* Login Button */}
-                <TouchableOpacity className="bg-blue-800 py-4 rounded-lg mb-4">
+                <TouchableOpacity className="bg-blue-800 py-4 rounded-lg mb-4"
+                    onPress={handleLogin}
+                    disabled={isLoading}>
                     <Text className="text-white text-center font-medium">LOGIN</Text>
                 </TouchableOpacity>
 

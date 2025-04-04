@@ -34,63 +34,63 @@ export default function CreateAccountScreen() {
 
 
   // Handle registration
-// Handle registration
-const handleRegister = async () => {
-  if (!fullName || !email || !phoneNumber || !password) {
-    Alert.alert("Error", "All fields are required.");
-    return;
-  }
-
-  setIsLoading(true);
-  try {
-    const user = {
-      nom: fullName,
-      email,
-      telephone: phoneNumber,
-      password,
-      nomEtablissement: fullName,
-      adresseMap: "",
-      businessActivity: Acteur.Client,
-      typeActeur: Acteur.Client
-    };
-
-    const response = await fetch(`${BASE_URL}${API.REGISTER}`, { // Replace with your actual API endpoint
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      if (response.status === 400 && data.message === 'Email already in use') {
-        Alert.alert("Registration Failed", "This email is already registered. Please use a different email or login.");
-        await AsyncStorage.setItem('emailValidate', user.email);
-        // Navigate to validation screen or home
-    router.navigate("/login");
-      } else {
-        Alert.alert("Registration Failed", data.message || "Registration failed. Please try again.");
-      }
+  // Handle registration
+  const handleRegister = async () => {
+    if (!fullName || !email || !phoneNumber || !password) {
+      Alert.alert("Error", "All fields are required.");
       return;
     }
 
-    // Success case
-    Alert.alert("Success", "Account created successfully!");
+    setIsLoading(true);
+    try {
+      const user = {
+        nom: fullName,
+        email,
+        telephone: phoneNumber,
+        password,
+        nomEtablissement: fullName,
+        adresseMap: "",
+        businessActivity: Acteur.Client,
+        typeActeur: Acteur.Client
+      };
 
-     await AsyncStorage.setItem('emailValidate', user.email);
-    
-    // Navigate to validation screen or home
-    router.navigate("/validateAccount");
-    
-  } catch (error) {
-    console.error('Registration error:', error);
-    Alert.alert("Registration Failed", "Network error. Please check your connection and try again.");
-  } finally {
-    setIsLoading(false);
-  }
-};
+      const response = await fetch(`${BASE_URL}${API.REGISTER}`, { // Replace with your actual API endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        if (response.status === 400 && data.message === 'Email already in use') {
+          Alert.alert("Registration Failed", "This email is already registered. Please use a different email or login.");
+          await AsyncStorage.setItem('emailValidate', user.email);
+          // Navigate to validation screen or home
+          router.navigate("/login");
+        } else {
+          Alert.alert("Registration Failed", data.message || "Registration failed. Please try again.");
+        }
+        return;
+      }
+
+      // Success case
+      Alert.alert("Success", "Account created successfully!");
+
+      await AsyncStorage.setItem('emailValidate', user.email);
+
+      // Navigate to validation screen or home
+      router.navigate("/validateAccount");
+
+    } catch (error) {
+      console.error('Registration error:', error);
+      Alert.alert("Registration Failed", "Network error. Please check your connection and try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
@@ -186,7 +186,7 @@ const handleRegister = async () => {
           </View>
         </View>
 
-        
+
         <TouchableOpacity
           className="bg-blue-800 py-4 rounded-lg mb-4"
           onPress={handleRegister}

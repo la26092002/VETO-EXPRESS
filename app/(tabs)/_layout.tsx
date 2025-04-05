@@ -181,61 +181,21 @@ export default function TabLayout() {
       <Tabs.Screen
         name="deliveryTo"
         options={{
-          title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <HomeIcon focused={focused} color={color} />
-          ),
+          tabBarIcon: ({ focused, color }) => <HomeIcon focused={focused} color={color} />,
         }}
       />
       <Tabs.Screen
-        name="topService"
-        options={{
-          title: "Search",
-          tabBarIcon: ({ color, focused }) => (
-            <SearchIcon focused={focused} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="deliveryToo"
-        options={{
-          title: "Orders",
-          tabBarIcon: ({ color, focused }) => (
-            <ServiceIcon focused={focused} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="createAccount"
-        options={{
-          title: "Profile",
-          tabBarIcon: ({ color, focused }) => (
-            <ProfileIcon focused={focused} color={color} />
-          ),
-        }}
-      />
-      {/* comment me  */}
-      {/* <Tabs.Screen
         name="service"
         options={{
-          href: null, // This prevents the tab from showing in the tab bar
-          // Alternatively, you can use `headerShown: false` if you want to hide just the header
+          tabBarIcon: ({ focused, color }) => <ServiceIcon focused={focused} color={color} />,
         }}
       />
       <Tabs.Screen
         name="accountSetting"
         options={{
-          href: null, // This prevents the tab from showing in the tab bar
-          // Alternatively, you can use `headerShown: false` if you want to hide just the header
+          tabBarIcon: ({ focused, color }) => <ProfileIcon focused={focused} color={color} />,
         }}
       />
-      <Tabs.Screen
-        name="service-details"
-        options={{
-          href: null, // This prevents the tab from showing in the tab bar
-          // Alternatively, you can use `headerShown: false` if you want to hide just the header
-        }}
-      /> */}
     </Tabs>
   );
 }

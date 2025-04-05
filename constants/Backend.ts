@@ -54,8 +54,15 @@ export const API = Object.freeze({
     REGISTER: "/api/auth/register",
     GET_DOCTORS: "/api/client/getDocteurs",
     GET_VENDEURS: "/api/client/getVendeurs",
-    GET_USER: "/api/auth/me"
+    GET_USER: "/api/auth/me",
+    UPDATE_PROFILE: "/api/auth/update",
+    CHANGE_PASSWORD_OLD_PASS: "/api/auth/changePasswordWithTokenAndOldPassword",
 } as const);
+export const AsyncStorageValue = Object.freeze({
+    userToken: "userToken",
+} as const);
+
+
 
 export type {
     ActeurType,

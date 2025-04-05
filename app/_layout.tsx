@@ -47,6 +47,17 @@ export default function RootLayout() {
           <Stack.Screen name="verifyCode" options={{ headerShown: false }} />
           <Stack.Screen name="validateAccount" options={{ headerShown: false }} />
 
+
+          {//With authorisation
+}
+          <Stack.Screen name="profileInfo" options={{ headerShown: false }} />
+          <Stack.Screen name="changePassword" options={{ headerShown: false }} />
+          <Stack.Screen name="paymentMethod" options={{ headerShown: false }} />
+          <Stack.Screen name="payment" options={{ headerShown: false }} />
+          <Stack.Screen name="locations" options={{ headerShown: false }} />
+          <Stack.Screen name="FAQScreen" options={{ headerShown: false }} />
+          
+
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>

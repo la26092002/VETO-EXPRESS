@@ -10,16 +10,16 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {} from "react-native-svg";
+import { } from "react-native-svg";
 import BannerSvgComponent from "@/components/banner";
 import { useDataContext } from "@/context/DataContext";
 export default function HomeScreen() {
 
   const { state, dispatch } = useDataContext();
   useEffect(() => {
-    console.log(state.user)
+    console.log(state.doctors)
   }, [])
-  
+
   // Delivery partners data
   const deliveryPartners = [
     {
@@ -155,18 +155,18 @@ export default function HomeScreen() {
     <TouchableOpacity className="mr-4 w-40">
       <View className="mb-2">
         <Image
-          source={item.image}
+          source={require(`@/assets/images/photo_1.jpg`)}
           className="w-40 h-28 rounded-lg"
           resizeMode="cover"
         />
       </View>
-      <Text className="font-medium text-base">{item.name}</Text>
-      <Text className="text-gray-500 text-sm">{item.location}</Text>
+      <Text className="font-medium text-base">{item.nom}</Text>
+      <Text className="text-gray-500 text-sm">{item.adresseMap}</Text>
       <View className="flex-row items-center mt-1">
         <View className="bg-blue-800 rounded-md px-2 py-1 mr-2">
-          <Text className="text-white text-xs">{item.rating}</Text>
+          <Text className="text-white text-xs">4.5</Text>
         </View>
-        <Text className="text-gray-500 text-xs">{item.time}</Text>
+        <Text className="text-gray-500 text-xs">25min</Text>
         <Text className="text-gray-500 text-xs mx-1">•</Text>
         <Text className="text-gray-500 text-xs">Free delivery</Text>
       </View>
@@ -183,7 +183,7 @@ export default function HomeScreen() {
         <View className="flex-row items-center justify-center px-4 py-3 ">
           <TouchableOpacity className="w-max flex-row items-center justify-center flex-1 ">
             <Text className=" text-center text-xl font-medium text-gray-800">
-              HayStreet, Perth
+              {state.user?.adresseMap}
             </Text>
             <Ionicons name="chevron-down" size={24} color="black" />
           </TouchableOpacity>
@@ -245,9 +245,9 @@ export default function HomeScreen() {
           </View>
 
           <FlatList
-            data={bestDoctors}
+            data={state.doctors}
             renderItem={renderDoctor}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.userId}
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={{ paddingLeft: 20, paddingRight: 10 }}

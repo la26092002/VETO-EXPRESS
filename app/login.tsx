@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -11,7 +11,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import { API } from "@/constants/Backend";
+import { API, AsyncStorageValue } from "@/constants/Backend";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDataContext } from "@/context/DataContext";
 
@@ -30,6 +30,48 @@ export default function LoginScreen() {
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
+
+    useEffect(() => {
+        const checkToken = async () => {
+            try {
+
+                const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
+                if (token) {
+                    // Setup headers with the token
+                    const headers = {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`,
+                    };
+
+                    // Perform the API requests in parallel
+                    const [userRes, doctorsRes, vendeursRes] = await Promise.all([
+                        fetch(`${API.BASE_URL}${API.GET_USER}`, { headers }),
+                        fetch(`${API.BASE_URL}${API.GET_DOCTORS}`, { headers }),
+                        fetch(`${API.BASE_URL}${API.GET_VENDEURS}`, { headers }),
+                    ]);
+
+                    if (userRes.ok && doctorsRes.ok && vendeursRes.ok) {
+                        const userData = await userRes.json();
+                        const doctorsData = await doctorsRes.json();
+                        const vendeursData = await vendeursRes.json();
+
+                        dispatch({ type: "SET_USER", payload: userData });
+                        dispatch({ type: "SET_DOCTORS", payload: doctorsData.docteurs });
+                        dispatch({ type: "SET_VENDEURS", payload: vendeursData.vendeurs });
+
+                        router.navigate('/deliveryTo');
+                    } else {
+                        await AsyncStorage.removeItem(AsyncStorageValue.userToken);
+                    }
+
+                }
+            } catch (error) {
+                console.error('Error reading token:', error);
+            }
+        };
+
+        checkToken();
+    }, []);
 
     // Handle registration
     const handleLogin = async () => {
@@ -71,7 +113,7 @@ export default function LoginScreen() {
 
             if (data.user.isValidate) {
                 if (data.user.typeActeur === "Client") {
-                    await AsyncStorage.setItem('userToken', data.token);
+                    await AsyncStorage.setItem(AsyncStorageValue.userToken, data.token);
 
                     // Setup headers with the token
                     const headers = {
@@ -90,8 +132,8 @@ export default function LoginScreen() {
                     const vendeursData = await vendeursRes.json();
 
                     dispatch({ type: "SET_USER", payload: userData });
-                    dispatch({ type: "SET_DOCTORS", payload: doctorsData });
-                    dispatch({ type: "SET_VENDEURS", payload: vendeursData });
+                    dispatch({ type: "SET_DOCTORS", payload: doctorsData.docteurs });
+                    dispatch({ type: "SET_VENDEURS", payload: vendeursData.vendeurs });
 
 
                     router.navigate("/deliveryTo");

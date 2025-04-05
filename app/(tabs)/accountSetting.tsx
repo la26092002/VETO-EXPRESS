@@ -6,9 +6,14 @@ import {
   TouchableOpacity,
   StatusBar,
   Switch,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AsyncStorageValue } from "@/constants/Backend";
+import { useDataContext } from "@/context/DataContext";
 
 export default function AccountSettingsScreen() {
   // State for toggle switches
@@ -17,6 +22,8 @@ export default function AccountSettingsScreen() {
   const [promotionalNotifications, setPromotionalNotifications] =
     useState(true);
 
+
+  const { state, dispatch } = useDataContext();
   // Settings categories
   const accountSettings = [
     {
@@ -31,12 +38,7 @@ export default function AccountSettingsScreen() {
       title: "Change Password",
       description: "Change your password",
     },
-    {
-      id: "payment",
-      icon: "card-outline",
-      title: "Payment Methods",
-      description: "Add your credit & debit cards",
-    },
+    
     {
       id: "locations",
       icon: "location-outline",
@@ -98,6 +100,53 @@ export default function AccountSettingsScreen() {
     <TouchableOpacity
       key={item.id}
       className="flex-row items-center py-4 border-b border-gray-100"
+      onPress={() => {
+        if (item.id === "logout") {
+          Alert.alert(
+            "Logout",
+            "Are you sure you want to logout?",
+            [
+              {
+                text: "Cancel",
+                style: "cancel",
+              },
+              {
+                text: "Logout",
+                onPress: async () => {
+                  try {
+                    await AsyncStorage.removeItem(AsyncStorageValue.userToken);
+                    dispatch({ type: "RESET" }); // <-- Optional: If you have a RESET type to clear all user data
+                    router.navigate('/login');
+                  } catch (error) {
+                    console.error("Logout Error:", error);
+                  }
+                },
+                style: "destructive",
+              },
+            ],
+            { cancelable: true }
+          );
+        } else if (item.id === "profile") {
+          router.navigate('/profileInfo');
+          console.log("profileInfo")
+        } else if(item.id === "password"){
+          router.navigate('/changePassword');
+          console.log("changePassword")
+          
+        }else if(item.id === "payment"){
+          router.navigate('/paymentMethod');
+          console.log("paymentMethod")
+        }else if(item.id === "locations"){
+          router.navigate('/locations');
+          console.log("paymentMethod")
+        } else if(item.id === "faq"){
+          router.navigate('/FAQScreen');
+          console.log("FAQScreen")
+        } else {
+          // Navigate or handle other settings
+          console.log(`Pressed ${item.title}`);
+        }
+      }}
     >
       <View className="w-10 items-center">
         <Ionicons name={item.icon} size={24} color="#6b7280" />

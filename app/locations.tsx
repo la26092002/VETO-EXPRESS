@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDataContext } from '@/context/DataContext';
 import { router } from 'expo-router';
 import * as Location from 'expo-location';
+import MapView, { Marker } from 'react-native-maps'; // Import MapView and Marker
 
 export default function LocationScreen() {
   const { state } = useDataContext();
@@ -12,7 +13,6 @@ export default function LocationScreen() {
 
   const [currentLatitude, setCurrentLatitude] = useState(userLatitude || null);
   const [currentLongitude, setCurrentLongitude] = useState(userLongitude || null);
-
   const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
 
   // Request permission and get the user's location if the coordinates are not available
@@ -75,9 +75,24 @@ export default function LocationScreen() {
           {currentLatitude && currentLongitude
             ? `Latitude: ${currentLatitude}, Longitude: ${currentLongitude}`
             : locationPermissionGranted
-            ? 'Location not available'
-            : 'Waiting for location permission...'}
+              ? 'Location not available'
+              : 'Waiting for location permission...'}
         </Text>
+
+        {/* Map View */}
+        {currentLatitude && currentLongitude && (
+          <MapView
+            style={{ width: '100%', height: 300, marginTop: 20 }}
+            initialRegion={{
+              latitude: currentLatitude,
+              longitude: currentLongitude,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+            }}
+          >
+            <Marker coordinate={{ latitude: currentLatitude, longitude: currentLongitude }} />
+          </MapView>
+        )}
 
         {/* Button to open map with location */}
         <TouchableOpacity

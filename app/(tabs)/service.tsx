@@ -2,87 +2,48 @@ import { View, Text, Image, FlatList, TouchableOpacity } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useNavigation } from "@react-navigation/native";
+import { ServiceType, ServiceVenteType } from "@/constants/Backend";
+import { router } from "expo-router";
+// Services array using the service types
 const services = [
   {
     id: 1,
-    name: "Special Pet\nServices",
+    name: ServiceType.DemandeRdv,
     image: require("@/assets/images/photo_1.jpg"),
+    location: "topServiceDoctor",
   },
   {
     id: 2,
-    name: "Pet\nGrooming",
+    name: ServiceType.ConsultationSuivi,
     image: require("@/assets/images/photo_2.jpg"),
+    location: "topServiceDoctor",
   },
-  { id: 3, name: "Food", image: require("@/assets/images/photo_3.jpg") },
+  {
+    id: 3,
+    name: ServiceType.RdvRapide,
+    image: require("@/assets/images/photo_3.jpg"),
+    location: "topServiceDoctor",
+  },
   {
     id: 4,
-    name: "Pet\nTraining",
+    name: ServiceVenteType.ProduitVeterinaire,
     image: require("@/assets/images/photo_4.jpg"),
+    location: "topServiceVendeur",
   },
   {
     id: 5,
-    name: "Veterinary\nServices",
+    name: ServiceVenteType.ProduitAnimalerie,
     image: require("@/assets/images/photo_5.jpg"),
+    location: "topServiceVendeur",
   },
-  {
-    id: 6,
-    name: "Special Pet\nServices",
-    image: require("@/assets/images/photo_1.jpg"),
-  },
-  {
-    id: 7,
-    name: "Pet\nGrooming",
-    image: require("@/assets/images/photo_2.jpg"),
-  },
-  { id: 8, name: "Food", image: require("@/assets/images/photo_3.jpg") },
-  {
-    id: 9,
-    name: "Pet\nTraining",
-    image: require("@/assets/images/photo_4.jpg"),
-  },
-  {
-    id: 10,
-    name: "Veterinary\nServices",
-    image: require("@/assets/images/photo_5.jpg"),
-  },
-  {
-    id: 11,
-    name: "Special Pet\nServices",
-    image: require("@/assets/images/photo_1.jpg"),
-  },
-  {
-    id: 12,
-    name: "Pet\nGrooming",
-    image: require("@/assets/images/photo_2.jpg"),
-  },
-  { id: 13, name: "Food", image: require("@/assets/images/photo_3.jpg") },
-  {
-    id: 14,
-    name: "Pet\nTraining",
-    image: require("@/assets/images/photo_4.jpg"),
-  },
-  {
-    id: 15,
-    name: "Veterinary\nServices",
-    image: require("@/assets/images/photo_5.jpg"),
-  },
-  {
-    id: 16,
-    name: "Special Pet\nServices",
-    image: require("@/assets/images/photo_1.jpg"),
-  },
-  {
-    id: 17,
-    name: "Pet\nGrooming",
-    image: require("@/assets/images/photo_2.jpg"),
-  },
+  // Add more services as needed
 ];
 export default function TabTwoScreen() {
   const navigation = useNavigation();
   const renderService = ({ item }) => (
     <TouchableOpacity
       className="flex-1 m-2 h-40 bg-white rounded-2xl border border-gray-200 items-center justify-center shadow-sm overflow-hidden relative"
-      onPress={() => navigation.navigate(item.name)}
+      onPress={() => router.push(`/${item.location}?location=${item.location}`)}
     >
       <Image source={item.image} className="w-full h-full object-cover" />
       <View className="absolute inset-0 bg-black opacity-30" />

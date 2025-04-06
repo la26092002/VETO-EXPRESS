@@ -56,6 +56,13 @@ export default function RootLayout() {
           <Stack.Screen name="payment" options={{ headerShown: false }} />
           <Stack.Screen name="locations" options={{ headerShown: false }} />
           <Stack.Screen name="FAQScreen" options={{ headerShown: false }} />
+          <Stack.Screen name="service-details" options={{ headerShown: false }} />
+          
+          <Stack.Screen name="topServiceDoctor" options={{ headerShown: false }} />
+          <Stack.Screen name="topServiceVendeur" options={{ headerShown: false }} />
+
+          
+          
           
 
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

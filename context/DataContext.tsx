@@ -21,6 +21,9 @@ export interface User {
   ban: boolean;
   userLatitude: number | null;
   userLongitude: number | null;
+  smsNotification: boolean;
+  push_Notification: boolean;
+  promotional_Notification: boolean;
   createdAt: string;
   updatedAt: string;
 }

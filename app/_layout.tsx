@@ -41,25 +41,37 @@ export default function RootLayout() {
       <DataProvider>
         <Stack>
           <Stack.Screen name="index" options={{ headerShown: false }} />
-          <Stack.Screen name="createAccount" options={{ headerShown: false }} />
-          <Stack.Screen name="login" options={{ headerShown: false }} />
-          <Stack.Screen name="forgetPassword" options={{ headerShown: false }} />
-          <Stack.Screen name="verifyCode" options={{ headerShown: false }} />
-          <Stack.Screen name="validateAccount" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/createAccount" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/login" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/forgetPassword" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/verifyCode" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/validateAccount" options={{ headerShown: false }} />
 
 
           {//With authorisation
 }
-          <Stack.Screen name="profileInfo" options={{ headerShown: false }} />
-          <Stack.Screen name="changePassword" options={{ headerShown: false }} />
-          <Stack.Screen name="paymentMethod" options={{ headerShown: false }} />
-          <Stack.Screen name="payment" options={{ headerShown: false }} />
-          <Stack.Screen name="locations" options={{ headerShown: false }} />
-          <Stack.Screen name="FAQScreen" options={{ headerShown: false }} />
+          <Stack.Screen name="settings/profileInfo" options={{ headerShown: false }} />
+          <Stack.Screen name="settings/changePassword" options={{ headerShown: false }} />
+          <Stack.Screen name="settings/locations" options={{ headerShown: false }} />
+          <Stack.Screen name="settings/FAQScreen" options={{ headerShown: false }} />
+          
           <Stack.Screen name="service-details" options={{ headerShown: false }} />
           
           <Stack.Screen name="topServiceDoctor" options={{ headerShown: false }} />
           <Stack.Screen name="topServiceVendeur" options={{ headerShown: false }} />
+
+          <Stack.Screen name="settings/petsScreen" options={{ headerShown: false }} />
+          <Stack.Screen name="settings/add-pet" options={{ headerShown: false }} />
+          <Stack.Screen name="settings/add-paymentCardsScreen" options={{ headerShown: false }} />
+          
+          <Stack.Screen name="settings/paymentMethod" options={{ headerShown: false }} />
+          
+          
+
+        { // maps
+}
+<Stack.Screen name="maps/TrafficMapScreen" options={{ headerShown: false }} />
+
 
           
           

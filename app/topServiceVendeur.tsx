@@ -168,7 +168,7 @@ export default function TopServicesVendeursScreen() {
               {/* Service Image */}
               <View className="rounded-xl overflow-hidden mb-2">
                 <Image
-                  source={require("@/assets/images/photo_2.jpg")}
+                  source={require("@/assets/images/photo_5.jpg")}
                   className="w-full h-40"
                   resizeMode="cover"
                 />

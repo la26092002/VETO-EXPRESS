@@ -12,18 +12,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AsyncStorageValue } from "@/constants/Backend";
+import { API, AsyncStorageValue } from "@/constants/Backend";
 import { useDataContext } from "@/context/DataContext";
 
 export default function AccountSettingsScreen() {
-  // State for toggle switches
-  const [pushNotifications, setPushNotifications] = useState(true);
-  const [smsNotifications, setSmsNotifications] = useState(false);
-  const [promotionalNotifications, setPromotionalNotifications] =
-    useState(true);
-
-
   const { state, dispatch } = useDataContext();
+  // State for toggle switches
+  const [pushNotifications, setPushNotifications] = useState(state.user?.push_Notification || false);
+  const [smsNotifications, setSmsNotifications] = useState(state.user?.smsNotification || false);
+  const [promotionalNotifications, setPromotionalNotifications] = useState(state.user?.promotional_Notification || false);
+
+
   // Settings categories
   const accountSettings = [
     {
@@ -38,12 +37,24 @@ export default function AccountSettingsScreen() {
       title: "Change Password",
       description: "Change your password",
     },
-    
+
     {
       id: "locations",
       icon: "location-outline",
       title: "Locations",
       description: "Add or remove your delivery locations",
+    },
+    {
+      id: "payment",
+      icon: "card-outline",
+      title: "Payment Methods",
+      description: "Manage your saved payment options",
+    },
+    {
+      id: "pets",
+      icon: "paw-outline",
+      title: "My Pets",
+      description: "Add or update information about your pets",
     },
   ];
 
@@ -54,7 +65,37 @@ export default function AccountSettingsScreen() {
       title: "Push Notifications",
       description: "For daily update you will get it",
       value: pushNotifications,
-      onValueChange: () => setPushNotifications((prev) => !prev),
+      onValueChange: async () => {
+        try {
+          dispatch({
+            type: "UPDATE_USER",
+            payload: { push_Notification: !pushNotifications },
+          });
+          let newNotification = !pushNotifications
+          setPushNotifications((prev) => !prev)
+
+
+          const token = await AsyncStorage.getItem(AsyncStorageValue.userToken)
+          const response = await fetch(`${API.BASE_URL}${API.UPDATE_PROFILE}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              push_Notification: newNotification,
+            }),
+          });
+
+          if (!response.ok) {
+            setPushNotifications((prev) => !prev)
+            throw new Error("Failed to update push notification setting");
+          }
+        } catch (error) {
+          console.error("Error updating push notification:", error);
+        }
+
+      },
     },
     {
       id: "sms",
@@ -62,7 +103,33 @@ export default function AccountSettingsScreen() {
       title: "SMS Notifications",
       description: "For daily update you will get it",
       value: smsNotifications,
-      onValueChange: () => setSmsNotifications((prev) => !prev),
+      onValueChange: async () => {
+        dispatch({
+          type: "UPDATE_USER",
+          payload: { smsNotification: !smsNotifications },
+        });
+        let newNotification = !smsNotifications
+        setSmsNotifications((prev) => !prev)
+
+
+        const token = await AsyncStorage.getItem(AsyncStorageValue.userToken)
+        const response = await fetch(`${API.BASE_URL}${API.UPDATE_PROFILE}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            smsNotification: newNotification,
+          }),
+        });
+
+        if (!response.ok) {
+          setSmsNotifications((prev) => !prev)
+          throw new Error("Failed to update push notification setting");
+        }
+
+      },
     },
     {
       id: "promo",
@@ -70,7 +137,34 @@ export default function AccountSettingsScreen() {
       title: "Promotional Notifications",
       description: "For daily update you will get it",
       value: promotionalNotifications,
-      onValueChange: () => setPromotionalNotifications((prev) => !prev),
+      onValueChange: async () => {
+        dispatch({
+          type: "UPDATE_USER",
+          payload: { promotional_Notification: !promotionalNotifications },
+        });
+        let newNotification = !promotionalNotifications
+        setPromotionalNotifications((prev) => !prev)
+
+
+
+        const token = await AsyncStorage.getItem(AsyncStorageValue.userToken)
+        const response = await fetch(`${API.BASE_URL}${API.UPDATE_PROFILE}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            promotional_Notification: newNotification,
+          }),
+        });
+
+        if (!response.ok) {
+          setPromotionalNotifications((prev) => !prev)
+          throw new Error("Failed to update push notification setting");
+        }
+
+      },
     },
   ];
 
@@ -116,7 +210,7 @@ export default function AccountSettingsScreen() {
                   try {
                     await AsyncStorage.removeItem(AsyncStorageValue.userToken);
                     dispatch({ type: "RESET" }); // <-- Optional: If you have a RESET type to clear all user data
-                    router.navigate('/login');
+                    router.navigate('auth/login');
                   } catch (error) {
                     console.error("Logout Error:", error);
                   }
@@ -127,21 +221,30 @@ export default function AccountSettingsScreen() {
             { cancelable: true }
           );
         } else if (item.id === "profile") {
-          router.navigate('/profileInfo');
+          router.navigate('settings/profileInfo');
           console.log("profileInfo")
-        } else if(item.id === "password"){
-          router.navigate('/changePassword');
+        } else if (item.id === "password") {
+          router.navigate('settings/changePassword');
           console.log("changePassword")
-          
-        }else if(item.id === "payment"){
-          router.navigate('/paymentMethod');
+
+        } else if (item.id === "payment") {
+          router.navigate('settings/paymentMethod');
           console.log("paymentMethod")
-        }else if(item.id === "locations"){
-          router.navigate('/locations');
+        } else if (item.id === "locations") {
+          router.navigate('settings/locations');
           console.log("paymentMethod")
-        } else if(item.id === "faq"){
-          router.navigate('/FAQScreen');
+        } else if (item.id === "faq") {
+          router.navigate('settings/FAQScreen');
           console.log("FAQScreen")
+        }else if(item.id === "payment"){
+          //settings/paymentCardsScreen
+          router.navigate('settings/paymentMethod');
+          console.log("paymentCardsScreen")
+
+        }else if(item.id === "pets"){
+          router.navigate('settings/petsScreen');
+          console.log("petsScreen")
+          
         } else {
           // Navigate or handle other settings
           console.log(`Pressed ${item.title}`);

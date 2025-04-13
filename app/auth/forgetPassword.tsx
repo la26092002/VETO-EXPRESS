@@ -20,7 +20,7 @@ export default function ForgotPasswordScreen() {
 
       {/* Header with back button and title */}
       <View className="flex-row items-center justify-between px-4 py-3">
-        <TouchableOpacity onPress={() => router.navigate('/login')}>
+        <TouchableOpacity onPress={() => router.navigate('auth/login')}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text className="text-lg font-medium text-center flex-1">Forgot Password</Text>
@@ -51,12 +51,12 @@ export default function ForgotPasswordScreen() {
 
         {/* Reset Password Button */}
         <TouchableOpacity className="bg-blue-800 py-4 rounded-lg mb-4" 
-        onPress={() => router.navigate('/verifyCode')} >
+        onPress={() => router.navigate('auth/verifyCode')} >
           <Text className="text-white text-center font-medium">RESET PASSWORD</Text>
         </TouchableOpacity>
 
         {/* Back to Login */}
-        <TouchableOpacity  onPress={() => router.navigate('/login')} >
+        <TouchableOpacity  onPress={() => router.navigate('auth/login')} >
           <Text className="text-blue-600 text-center">Back to Login</Text>
         </TouchableOpacity>
       </View>

@@ -69,7 +69,7 @@ export default function CreateAccountScreen() {
           Alert.alert("Registration Failed", "This email is already registered. Please use a different email or login.");
           await AsyncStorage.setItem('emailValidate', user.email);
           // Navigate to validation screen or home
-          router.navigate("/login");
+          router.navigate("auth/login");
         } else {
           Alert.alert("Registration Failed", data.message || "Registration failed. Please try again.");
         }
@@ -82,7 +82,7 @@ export default function CreateAccountScreen() {
       await AsyncStorage.setItem('emailValidate', user.email);
 
       // Navigate to validation screen or home
-      router.navigate("/validateAccount");
+      router.navigate("auth/validateAccount");
 
     } catch (error) {
       console.error('Registration error:', error);
@@ -98,7 +98,7 @@ export default function CreateAccountScreen() {
 
       {/* Header with back button and title */}
       <View className="flex-row items-center justify-between px-4 py-3">
-        <TouchableOpacity onPress={() => router.navigate('/login')}>
+        <TouchableOpacity onPress={() => router.navigate('auth/login')}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text className="text-lg font-medium text-center flex-1">
@@ -120,7 +120,7 @@ export default function CreateAccountScreen() {
           <Text className="text-gray-500">
             Enter your Name, Email, Phone Number, and Password for sign up.
           </Text>
-          <TouchableOpacity onPress={() => router.navigate('/login')}>
+          <TouchableOpacity onPress={() => router.navigate('auth/login')}>
             <Text className="text-blue-600 ml-1">Already have an account?</Text>
           </TouchableOpacity>
         </View>

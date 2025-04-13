@@ -43,23 +43,15 @@ const services = [
 export default function TabTwoScreen() {
 
   const { dispatch } = useDataContext();
-
+  
 
   const navigation = useNavigation();
   const renderService = ({ item }) => (
     <TouchableOpacity
       className="flex-1 m-2 h-40 bg-white rounded-2xl border border-gray-200 items-center justify-center shadow-sm overflow-hidden relative"
       onPress={() => {
-
-        dispatch({
-          type: "UPDATE_Service_Consultation_Selectioner",
-          payload: {
-            type: item.name,
-            
-          }
-        });
-
         
+dispatch({ type: "SET_SERVICE_SELECTIONER", payload: item.name });
 
         router.push(`/${item.location}?location=${item.location}`)
       }}
@@ -76,7 +68,7 @@ export default function TabTwoScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 px-4">
         <Text className="text-3xl font-bold mt-6 mb-8 text-gray-900">
-          Our Service
+          Our Historic
         </Text>
 
         <FlatList

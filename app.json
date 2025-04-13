@@ -10,10 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.abdelghanymh.VETOEXPRESS",
       "config": {
         "googleMapsApiKey": "AIzaSyCC-9PM0YAo2gb_cFDUK0hJnyt0mjHsxkI"
       },
-      "bundleIdentifier": "com.abdelghanymh.VETOEXPRESS",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }

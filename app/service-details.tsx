@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,27 +6,44 @@ import {
   ScrollView,
   TouchableOpacity,
   StatusBar,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useDataContext } from "@/context/DataContext";
+import { API, AsyncStorageValue, ServiceLivraisonPar } from "@/constants/Backend";
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 const serviceInfo = {
   header: {
     title: "Service",
-    backText: "Back",
+    backText: "Retour",
   },
   heroImage: {
     source: require("@/assets/images/photo_1.jpg"),
-    alt: "Veterinary services",
+    alt: "Services vétérinaires",
   },
   servicesTitle: {
-    main: "Veterinary Services",
-    seeAll: "See all",
+    main: "Services Vétérinaires",
+    seeAll: "Voir tout",
   },
   categories: [
-    { id: 1, name: "GENERAL HEALTH CHECK-UPS" },
-    { id: 2, name: "VACCINATIONS" },
-    { id: 3, name: "SURGERY AND EMERGENCY" },
-    { id: 4, name: "DENTAL CARE" },
+    {
+      id: ServiceLivraisonPar.Urgence,
+      name: ServiceLivraisonPar.Urgence,
+      comment: "Cette offre est destinée aux urgences",
+    },
+    {
+      id: ServiceLivraisonPar.VetoLib,
+      name: ServiceLivraisonPar.VetoLib,
+      comment: "Cette offre peut prendre jusqu'à 2 jours",
+    },
+    {
+      id: ServiceLivraisonPar.VetoMoov,
+      name: ServiceLivraisonPar.VetoMoov,
+      comment: "Cette offre peut prendre quelques minutes + livraison par notre société",
+    },
   ],
   styles: {
     categoryButton: "border border-blue-500 rounded-lg my-2 py-4 w-[80%]",
@@ -35,29 +52,77 @@ const serviceInfo = {
 };
 
 export default function VeterinaryServicesScreen() {
+  const { state, dispatch } = useDataContext();
+
+  const [pets, setPets] = useState([]);
+  const [selectedPetId, setSelectedPetId] = useState(null);
+  const [selectedService, setSelectedService] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPets = async () => {
+      try {
+        const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
+        const res = await fetch(`${API.BASE_URL}${API.getAllPets}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+        setPets(data.pets || []);
+      } catch (err) {
+        console.error("Error fetching pets:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPets();
+  }, []);
+  
+  const handleServiceSelection = (category) => {
+    setSelectedService(category.name);
+  };
+
+  const handleNext = () => {
+    const selectedPet = pets.find(p => p.petId === selectedPetId);
+    dispatch({
+      type: "UPDATE_Service_Consultation_Selectioner",
+      payload: {
+        pet: selectedPet,
+        ServiceLivraisonPar: selectedService,
+      },
+    });
+    router.push("maps/TrafficMapScreen");
+  };
+
+
+
+  useEffect(() => {
+    
+    console.log('------')
+   console.log(state.serviceConsultationSelectioner)
+
+
+  }, [])
+  
   return (
     <SafeAreaView className="flex-1 bg-white p">
       <StatusBar barStyle="dark-content" />
 
-      {/* Header */}
-      <View className="flex-row items-center justify-center px-4 py-3 border-b border-gray-200">
-        <Text className="flex-1 text-center text-base font-medium text-gray-800">
+      {/* En-tête */}
+      <View className="flex-row items-center justify-between px-4 py-3">
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="chevron-back" size={24} color="black" />
+        </TouchableOpacity>
+        <Text className="text-lg font-medium text-center flex-1">
           {serviceInfo.header.title}
         </Text>
-        <View className="w-max flex-row items-center justify-center gap-6 ">
-          <TouchableOpacity>
-            <Ionicons name="chevron-down" size={24} color="black" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text className="text-base font-medium text-gray-800">
-              {serviceInfo.header.backText}
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <View className="w-6" />
       </View>
 
       <ScrollView className="flex-1">
-        {/* Hero Image */}
+        {/* Image principale */}
         <View className="mx-5 my-8 rounded-lg overflow-hidden">
           <Image
             source={serviceInfo.heroImage.source}
@@ -67,30 +132,90 @@ export default function VeterinaryServicesScreen() {
           />
         </View>
 
-        {/* Services Title Section */}
-        <View className="flex-row justify-between items-center mx-5 my-8">
-          <Text className="text-lg font-semibold text-gray-800">
-            {serviceInfo.servicesTitle.main}
+        <View className="mx-5 my-2">
+          <Text className="text-xl font-semibold text-gray-800">
+            {state.serviceConsultationSelectioner?.type}
           </Text>
-          <TouchableOpacity>
-            <Text className="text-amber-500 text-sm">
-              {serviceInfo.servicesTitle.seeAll}
-            </Text>
-          </TouchableOpacity>
+          <Text className="text-sm text-gray-600 mt-1">
+            Docteur : {state.serviceConsultationSelectioner?.docteur  }
+          </Text>
         </View>
 
-        {/* Service Categories */}
-        <View className="flex flex-col justify-center items-center">
-          {serviceInfo.categories.map((category) => (
-            <TouchableOpacity
-              key={category.id}
-              className={serviceInfo.styles.categoryButton}
-            >
-              <Text className={serviceInfo.styles.categoryText}>
-                {category.name}
-              </Text>
-            </TouchableOpacity>
-          ))}
+
+         {/* 🐶 Pets Section */}
+         <View className="mx-5">
+          <Text className="text-lg font-semibold text-gray-800 mb-2">
+            Sélectionnez un animal :
+          </Text>
+          {loading ? (
+            <ActivityIndicator size="small" />
+          ) : pets.length === 0 ? (
+            <Text className="text-sm text-gray-500">Aucun animal trouvé.</Text>
+          ) : (
+            pets.map((pet) => (
+              <TouchableOpacity
+                key={pet.petId}
+                onPress={() => setSelectedPetId(pet.petId)}
+                className={`border rounded-lg p-3 mb-2 ${
+                  selectedPetId === pet.petId
+                    ? "border-amber-500 bg-amber-50"
+                    : "border-gray-300"
+                }`}
+              >
+                <Text className="text-base font-medium">{pet.petName}</Text>
+                <Text className="text-xs text-gray-600">{pet.petType} - {pet.petAge} ans</Text>
+              </TouchableOpacity>
+            ))
+          )}
+        </View>
+
+        
+        {/* Section Titre */}
+        {/* 🩺 Services Section */}
+        <View className="mx-5 my-8">
+  <Text className="text-lg font-semibold text-gray-800 mb-4">
+    {serviceInfo.servicesTitle.main}
+  </Text>
+
+  <View className="flex flex-wrap flex-row justify-between">
+    {serviceInfo.categories.map((category) => (
+      <TouchableOpacity
+        key={category.id}
+        onPress={() => handleServiceSelection(category)}
+        disabled={!selectedPetId}
+        className={`w-[48%] mb-4 p-4 rounded-xl shadow-sm border transition-all ${
+          selectedService === category.name
+            ? "border-amber-500 bg-amber-50"
+            : "border-gray-300 bg-white"
+        }`}
+      >
+        <Text className="text-center text-base font-semibold text-gray-800">
+          {category.name}
+        </Text>
+        <Text className="text-xs text-gray-500 text-center mt-1">
+          {category.comment}
+        </Text>
+      </TouchableOpacity>
+    ))}
+  </View>
+</View>
+
+
+        {/* ✅ Next Button */}
+        <View className="mx-5 mt-8 mb-16">
+          <TouchableOpacity
+            onPress={handleNext}
+            disabled={!selectedPetId || !selectedService}
+            className={`py-4 rounded-lg ${
+              selectedPetId && selectedService
+                ? "bg-amber-500"
+                : "bg-gray-300"
+            }`}
+          >
+            <Text className="text-center text-white font-semibold text-base">
+              Suivant
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </SafeAreaView>

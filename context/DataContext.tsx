@@ -28,10 +28,25 @@ export interface User {
   updatedAt: string;
 }
 
+
+export interface ServiceConsultationSelectioner {
+  docteurId: number;
+  docteur: string;
+  type: string;
+  ServiceLivraisonPar: string;
+  petId: number;
+  petName: string;
+
+}
+
 interface State {
   user: User | null;
   doctors: User[];
   vendeurs: User[];
+  serviceSelectioner: string;
+  docteurSelectioner: User | null;
+
+  serviceConsultationSelectioner: ServiceConsultationSelectioner | null;
 }
 
 type Action =
@@ -39,6 +54,12 @@ type Action =
   | { type: "UPDATE_USER"; payload: Partial<User> }  // Adding UPDATE_USER action
   | { type: "SET_DOCTORS"; payload: User[] }
   | { type: "SET_VENDEURS"; payload: User[] }
+  | { type: "SET_SERVICE_SELECTIONER"; payload: string }
+  | { type: "SET_DOCTEUR_SELECTIONER"; payload: User }
+
+  | { type: "UPDATE_Service_Consultation_Selectioner"; payload: Partial<ServiceConsultationSelectioner> }  // Adding UPDATE_USER action
+  | { type: "SET_Service_Consultation_Selectioner"; payload: ServiceConsultationSelectioner }
+
   | { type: "RESET" };
 
 // ========== Initial State ==========
@@ -46,6 +67,10 @@ const initialState: State = {
   user: null,
   doctors: [],
   vendeurs: [],
+  serviceSelectioner: "",
+  docteurSelectioner: null,
+
+  serviceConsultationSelectioner: null
 };
 
 // ========== Reducer ==========
@@ -69,6 +94,45 @@ const reducer = (state: State, action: Action): State => {
 
     case "SET_VENDEURS":
       return { ...state, vendeurs: action.payload };
+
+    case "SET_SERVICE_SELECTIONER":
+      return { ...state, serviceSelectioner: action.payload };
+
+    case "SET_DOCTEUR_SELECTIONER":
+      return { ...state, docteurSelectioner: action.payload };
+
+
+
+
+    case "UPDATE_Service_Consultation_Selectioner": {
+      const initialService: ServiceConsultationSelectioner = {
+        docteurId: null,
+        docteur: null,
+        type: null,
+        ServiceLivraisonPar: null,
+        petId: null,
+        petName: null,
+      };
+
+      return {
+        ...state,
+        serviceConsultationSelectioner: {
+          ...(state.serviceConsultationSelectioner ?? initialService),
+          ...action.payload,
+        },
+      };
+    }
+
+
+
+    case "SET_Service_Consultation_Selectioner":
+      return {
+        ...state,
+        serviceConsultationSelectioner: action.payload,
+      };
+
+
+
 
     case "RESET":
       return initialState; // Resetting to the initial state

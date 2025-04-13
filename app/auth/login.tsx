@@ -104,7 +104,12 @@ export default function LoginScreen() {
                     Alert.alert("Registration Failed", "This email is already registered. Please use a different email or login.");
                     await AsyncStorage.setItem('emailValidate', user.email);
                     // Navigate to validation screen or home
-                    router.navigate("/login");
+                    // router.navigate("auth/login");
+                }else if(response.status === 401 ){
+                    Alert.alert("Registration Failed", "This password is not correct. Please use a different password.");
+                    await AsyncStorage.setItem('emailValidate', user.email);
+                    // Navigate to validation screen or home
+                    // router.navigate("auth/login");
                 } else {
                     Alert.alert("Login Failed", data.message || "Login failed. Please try again.");
                 }
@@ -145,7 +150,7 @@ export default function LoginScreen() {
 
                 await AsyncStorage.setItem('emailValidate', user.email);
                 // Navigate to validation screen or home
-                router.navigate("/validateAccount");
+                router.navigate("auth/validateAccount");
             }
             // Success case
 
@@ -220,14 +225,14 @@ export default function LoginScreen() {
                 </TouchableOpacity>
 
                 {/* Forgot Password */}
-                <TouchableOpacity onPress={() => router.navigate('/forgetPassword')}  >
+                <TouchableOpacity onPress={() => router.navigate('auth/forgetPassword')}  >
                     <Text className="text-blue-600 text-center mb-6">Forgot Password?</Text>
                 </TouchableOpacity>
 
                 {/* Sign Up Link */}
                 <View className="flex-row justify-center">
                     <Text className="text-gray-500">Don't have an account? </Text>
-                    <TouchableOpacity onPress={() => router.navigate('/createAccount')}>
+                    <TouchableOpacity onPress={() => router.navigate('auth/createAccount')}>
                         <Text className="text-blue-600 font-medium">Sign Up</Text>
                     </TouchableOpacity>
                 </View>

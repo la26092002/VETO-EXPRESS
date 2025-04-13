@@ -22,7 +22,7 @@ export default function ValidateAccountScreen() {
 
       {/* Header with back button and title */}
       <View className="flex-row items-center justify-between px-4 py-3">
-        <TouchableOpacity onPress={() => router.navigate('/createAccount')}>
+        <TouchableOpacity onPress={() => router.navigate('auth/createAccount')}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text className="text-lg font-medium text-center flex-1">Verify Code</Text>

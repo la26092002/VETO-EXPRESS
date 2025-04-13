@@ -42,15 +42,15 @@ export default function ChangePasswordScreen() {
       const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
       const headers = {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        "Authorization": `Bearer ${token}`,
       };
 
       const requestBody = {
-        oldPassword,
+        password:oldPassword,
         newPassword,
       };
 
-      const response = await fetch(`${API.BASE_URL}${API.CHANGE_PASSWORD_OLD_PASS}`, {
+      const response = await fetch(`${API.BASE_URL}${API.UPDATE_PROFILE}`, {
         method: "PUT",
         headers,
         body: JSON.stringify(requestBody),

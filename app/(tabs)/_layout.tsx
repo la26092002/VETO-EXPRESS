@@ -187,9 +187,17 @@ export default function TabLayout() {
       <Tabs.Screen
         name="service"
         options={{
+          tabBarIcon: ({ focused, color }) => <SearchIcon focused={focused} color={color} />,
+        }}
+      />
+
+      <Tabs.Screen
+        name="historique"
+        options={{
           tabBarIcon: ({ focused, color }) => <ServiceIcon focused={focused} color={color} />,
         }}
       />
+
       <Tabs.Screen
         name="accountSetting"
         options={{

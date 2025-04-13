@@ -49,7 +49,7 @@ export const ServiceLivraisonPar = Object.freeze({
 type ServiceLivraisonParType = keyof typeof ServiceLivraisonPar;
 
 export const API = Object.freeze({
-    BASE_URL: "http://192.168.1.12:3000",
+    BASE_URL:  "http://192.168.1.12:3000",
     LOGIN: "/api/auth/login",
     REGISTER: "/api/auth/register",
     GET_DOCTORS: "/api/client/getDocteurs",
@@ -57,6 +57,11 @@ export const API = Object.freeze({
     GET_USER: "/api/auth/me",
     UPDATE_PROFILE: "/api/auth/update",
     CHANGE_PASSWORD_OLD_PASS: "/api/auth/changePasswordWithTokenAndOldPassword",
+
+
+    addPet: "/api/client/addPet",
+    deletePet: "/api/client/deletePet/",
+    getAllPets: "/api/client/pets",
 } as const);
 export const AsyncStorageValue = Object.freeze({
     userToken: "userToken",

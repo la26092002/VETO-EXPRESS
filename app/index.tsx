@@ -46,7 +46,7 @@ export default function WelcomeScreen() {
         </View>
 
         {/* Get Started Button */}
-        <TouchableOpacity onPress={() => router.navigate('/login')} className="bg-blue-800 py-4 px-8 rounded-lg w-full">
+        <TouchableOpacity onPress={() => router.navigate('auth//login')} className="bg-blue-800 py-4 px-8 rounded-lg w-full">
           <Text className="text-white text-center font-medium">
             GET STARTED
           </Text>

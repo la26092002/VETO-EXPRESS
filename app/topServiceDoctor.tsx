@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -16,8 +16,10 @@ import { router, useLocalSearchParams } from "expo-router";
 
 export default function TopServicesScreen() {
 
-    const { state } = useDataContext();
+    const { state , dispatch } = useDataContext();
 
+
+    
   // Service categories that will be displayed as cards
   const serviceCategories = [
     {
@@ -139,6 +141,9 @@ export default function TopServicesScreen() {
     },
   ];
 
+
+
+
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
@@ -163,20 +168,35 @@ export default function TopServicesScreen() {
       <ScrollView className="flex-1">
         {/* Service Categories Grid */}
         <View className="flex-row flex-wrap justify-between px-6">
-          {state.doctors.map((service, index) => (
-            <TouchableOpacity key={service.userId} className="w-[48%] mb-6">
-              {/* Service Image */}
+          {state.doctors.map((doctor, index) => (
+            <TouchableOpacity key={doctor.userId} className="w-[48%] mb-6"
+            onPress={() => {
+              // Dispatch the selected doctor
+              console.log(state.serviceConsultationSelectioner)
+              dispatch({
+                type: "UPDATE_Service_Consultation_Selectioner",
+                payload: {
+                  docteurId: doctor.userId, // Use a real ID
+                  docteur: doctor.nom,
+                }
+              });
+          
+              // Navigate to service-details
+              router.push("/service-details");
+            }}
+             >
+              {/* doctor Image */}
               <View className="rounded-xl overflow-hidden mb-2">
                 <Image
-                  source={require("@/assets/images/photo_2.jpg")}
+                  source={require(`@/assets/images/photo_2.jpg`)}
                   className="w-full h-40"
                   resizeMode="cover"
                 />
               </View>
 
-              {/* Service Name */}
+              {/* doctor Name */}
               <Text className="text-lg font-medium text-gray-900 mb-1">
-                {service.nomEtablissement}
+                {doctor.nomEtablissement}
               </Text>
 
               {/* Location Info */}
@@ -185,7 +205,7 @@ export default function TopServicesScreen() {
                 FR
                 </Text>
                 <View className="w-1 h-1 rounded-full bg-gray-400 mx-2" />
-                <Text className="text-base text-gray-500"> {service.adresseMap}</Text>
+                <Text className="text-base text-gray-500"> {doctor.adresseMap}</Text>
               </View>
             </TouchableOpacity>
           ))}

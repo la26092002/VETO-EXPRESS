@@ -36,7 +36,7 @@ export interface ServiceConsultationSelectioner {
   ServiceLivraisonPar: string;
   petId: number;
   petName: string;
-
+  serviceId: string;
 }
 
 interface State {
@@ -112,6 +112,7 @@ const reducer = (state: State, action: Action): State => {
         ServiceLivraisonPar: null,
         petId: null,
         petName: null,
+        serviceId:null,
       };
 
       return {

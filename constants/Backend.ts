@@ -62,6 +62,11 @@ export const API = Object.freeze({
     addPet: "/api/client/addPet",
     deletePet: "/api/client/deletePet/",
     getAllPets: "/api/client/pets",
+
+
+    creerServiceConsultation: "/api/client/creerServiceConsultation",
+    getServiceConsultationById: "/api/client/getServiceConsultationById/",
+    
 } as const);
 export const AsyncStorageValue = Object.freeze({
     userToken: "userToken",

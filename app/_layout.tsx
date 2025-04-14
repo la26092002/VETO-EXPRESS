@@ -65,6 +65,10 @@ export default function RootLayout() {
           <Stack.Screen name="settings/add-paymentCardsScreen" options={{ headerShown: false }} />
           
           <Stack.Screen name="settings/paymentMethod" options={{ headerShown: false }} />
+
+
+          
+          <Stack.Screen name="serviceConsultation/serviceConsultationDetails" options={{ headerShown: false }} />
           
           
 

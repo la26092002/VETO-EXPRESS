@@ -19,7 +19,7 @@ import * as Linking from "expo-linking"; // Pour ouvrir Google Maps
 
 
 export default function ServiceConsultationDetails() {
-  const { state } = useDataContext();
+  const { state, dispatch } = useDataContext();
   const [loading, setLoading] = useState(true);
   const [consultation, setConsultation] = useState(null);
 

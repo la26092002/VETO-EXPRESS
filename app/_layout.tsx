@@ -70,6 +70,11 @@ export default function RootLayout() {
           
           <Stack.Screen name="serviceConsultation/serviceConsultationDetails" options={{ headerShown: false }} />
           
+
+          
+          <Stack.Screen name="serrviceVendre/ProductSelectionScreen" options={{ headerShown: false }} />
+          <Stack.Screen name="serrviceVendre/PanierScreen" options={{ headerShown: false }} />
+          
           
 
         { // maps

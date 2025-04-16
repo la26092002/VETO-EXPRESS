@@ -266,6 +266,8 @@ export default function VeterinaryServicesScreen() {
               Suivant
             </Text>
           </TouchableOpacity>
+
+          
         </View>
       </ScrollView>
     </SafeAreaView>

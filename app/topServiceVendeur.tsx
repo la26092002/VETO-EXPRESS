@@ -16,7 +16,7 @@ import { router, useLocalSearchParams } from "expo-router";
 
 export default function TopServicesVendeursScreen() {
 
-  const { state } = useDataContext();
+  const { state , dispatch } = useDataContext();
 
   // Service categories that will be displayed as cards
   const serviceCategories = [
@@ -164,7 +164,18 @@ export default function TopServicesVendeursScreen() {
         {/* Service Categories Grid */}
         <View className="flex-row flex-wrap justify-between px-6">
           {state.vendeurs.map((service, index) => (
-            <TouchableOpacity key={service.userId} className="w-[48%] mb-6">
+            <TouchableOpacity key={service.userId} className="w-[48%] mb-6" onPress={() => {
+                          // Dispatch the selected doctor
+                          dispatch({
+                            type: "UPDATE_Service_Vendeur_Selectioner",
+                            payload: {
+                              vendeurId: service.userId,
+                              vendeur: service.nomEtablissement,
+                            },
+                          });
+                          // Navigate to service-details
+                          router.push("serrviceVendre/ProductSelectionScreen");
+                        }}>
               {/* Service Image */}
               <View className="rounded-xl overflow-hidden mb-2">
                 <Image

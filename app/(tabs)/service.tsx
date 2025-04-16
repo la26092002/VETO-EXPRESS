@@ -51,11 +51,19 @@ export default function TabTwoScreen() {
       className="flex-1 m-2 h-40 bg-white rounded-2xl border border-gray-200 items-center justify-center shadow-sm overflow-hidden relative"
       onPress={() => {
 
+        
         dispatch({
           type: "UPDATE_Service_Consultation_Selectioner",
           payload: {
             type: item.name,
             
+          }
+        });
+
+        dispatch({
+          type: "UPDATE_Service_Vendeur_Selectioner",
+          payload: {
+            type: item.name,
           }
         });
 

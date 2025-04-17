@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { } from "react-native-svg";
 import BannerSvgComponent from "@/components/banner";
 import { useDataContext } from "@/context/DataContext";
+import { router } from "expo-router";
 export default function HomeScreen() {
 
   const { state, dispatch } = useDataContext();
@@ -181,7 +182,10 @@ export default function HomeScreen() {
       <View className="px-5 py-2 border-b border-gray-200">
         <Text className="text-center text-gray-500 text-xs">DELIVERY TO</Text>
         <View className="flex-row items-center justify-center px-4 py-3 ">
-          <TouchableOpacity className="w-max flex-row items-center justify-center flex-1 ">
+          <TouchableOpacity className="w-max flex-row items-center justify-center flex-1  "
+          onPress={() => {
+            router.push("/settings/locations")
+          }}>
             <Text className=" text-center text-xl font-medium text-gray-800">
               {state.user?.adresseMap}
             </Text>

@@ -158,7 +158,7 @@ const HistoriqueScreen = () => {
           <Text className="text-xs font-semibold">{item.status}</Text>
         </View>
         <Text className="text-sm text-gray-600">Vendeur: {item.vendeur.nom}</Text>
-        
+
 
         {item.produits.map((produit, index) => (
           <View key={index} className="mt-2">
@@ -205,6 +205,7 @@ const HistoriqueScreen = () => {
           </TouchableOpacity>
         </View>
 
+
         <FlatList
           data={choix === "consultations" ? consultations : achats}
           keyExtractor={(item, index) => (choix === "consultations" ? item.serviceId : item.serviceId) + index}
@@ -215,7 +216,15 @@ const HistoriqueScreen = () => {
           }}
           onEndReachedThreshold={0.3}
           ListFooterComponent={renderFooter}
+          ListEmptyComponent={
+            !loading && (
+              <Text className="text-center text-gray-500 mt-10">
+                Aucun {choix === "consultations" ? "consultation" : "achat"} trouvé.
+              </Text>
+            )
+          }
         />
+
 
       </View>
     </SafeAreaView>

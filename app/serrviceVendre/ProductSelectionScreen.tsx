@@ -1,5 +1,6 @@
-import { API, AsyncStorageValue } from "@/constants/Backend";
+import { API, AsyncStorageValue, ProductType } from "@/constants/Backend";
 import { useDataContext } from "@/context/DataContext";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -30,11 +31,11 @@ export default function ProductScreen() {
 
   const { state, dispatch } = useDataContext();
 
-useEffect(() => {
-  
-console.log(state.serviceVendeurSelectioner?.type)
-  
-}, [])
+  useEffect(() => {
+
+    console.log(state.serviceVendeurSelectioner?.type)
+
+  }, [])
   const fetchProducts = async (currentPage = 1, append = false) => {
     const userId = state.serviceVendeurSelectioner?.vendeurId;
     const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
@@ -113,7 +114,7 @@ console.log(state.serviceVendeurSelectioner?.type)
           payload: {
             id: parseInt(product.id),
             name: product.name,
-            image:product.image,
+            image: product.image,
             price: product.price,
             quantity: quantity,
           },
@@ -121,7 +122,7 @@ console.log(state.serviceVendeurSelectioner?.type)
         alert(`Ajouté ${quantity} x ${product.name} au panier`);
         setQuantities((prev) => ({ ...prev, [productId]: 0 }));
 
-        
+
       }
     } else {
       alert("Veuillez sélectionner une quantité");
@@ -143,6 +144,14 @@ console.log(state.serviceVendeurSelectioner?.type)
   return (
     <SafeAreaView className="flex-1 bg-white px-4">
       <StatusBar barStyle="dark-content" />
+      {/* Header */}
+      <View className="flex-row items-center justify-between px-4 py-3">
+        <TouchableOpacity onPress={() => router.back()}>
+          <Ionicons name="chevron-back" size={24} color="black" />
+        </TouchableOpacity>
+        <Text className="text-lg font-medium text-center flex-1">{state.serviceVendeurSelectioner?.type}</Text>
+        <View className="w-6" />
+      </View>
       <View className="flex-row justify-between items-center my-4">
         <Text className="text-2xl font-semibold text-gray-800">Produits</Text>
         <TouchableOpacity
@@ -150,7 +159,7 @@ console.log(state.serviceVendeurSelectioner?.type)
             // navigate to the Panier screen here
             console.log("Go to Panier");
             console.log(state.serviceVendeurSelectioner?.products)
-             router.push("serrviceVendre/PanierScreen");
+            router.push("serrviceVendre/PanierScreen");
           }}
           style={{ backgroundColor: "#B2F5EA" }}
           className="bg-amber-500 px-4 py-2 rounded-lg"

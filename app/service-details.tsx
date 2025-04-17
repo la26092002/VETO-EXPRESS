@@ -203,7 +203,15 @@ export default function VeterinaryServicesScreen() {
           {loading ? (
             <ActivityIndicator size="small" />
           ) : pets.length === 0 ? (
-            <Text className="text-sm text-gray-500">Aucun animal trouvé.</Text>
+            <View>
+              <Text className="text-sm text-gray-500 mb-2">Aucun animal trouvé.</Text>
+              <TouchableOpacity
+                onPress={() => router.push("settings/petsScreen")} // remplace "/pets/add" par le bon chemin vers l'écran d'ajout
+                className="py-3 px-4 bg-blue-500 rounded-lg"
+              >
+                <Text className="text-white text-center font-semibold">Ajouter un animal</Text>
+              </TouchableOpacity>
+            </View>
           ) : (
             pets.map((pet) => (
               <TouchableOpacity
@@ -267,7 +275,7 @@ export default function VeterinaryServicesScreen() {
             </Text>
           </TouchableOpacity>
 
-          
+
         </View>
       </ScrollView>
     </SafeAreaView>

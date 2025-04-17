@@ -44,12 +44,7 @@ export default function AccountSettingsScreen() {
       title: "Locations",
       description: "Add or remove your delivery locations",
     },
-    {
-      id: "payment",
-      icon: "card-outline",
-      title: "Payment Methods",
-      description: "Manage your saved payment options",
-    },
+    
     {
       id: "pets",
       icon: "paw-outline",

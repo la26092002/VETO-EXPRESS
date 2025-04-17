@@ -17,88 +17,88 @@ export default function PanierScreen() {
   const { state, dispatch } = useDataContext();
   const products = state.serviceVendeurSelectioner?.products || [];
 
-useEffect(() => {
-  
-console.log(state.serviceVendeurSelectioner?.type)
-  
-}, [])
+  useEffect(() => {
+
+    console.log(state.serviceVendeurSelectioner?.type)
+
+  }, [])
 
 
-const handleConfirmCommande = async () => {
-  const produits = state.serviceVendeurSelectioner?.products || [];
-  const vendeurId = state.serviceVendeurSelectioner?.vendeurId;
+  const handleConfirmCommande = async () => {
+    const produits = state.serviceVendeurSelectioner?.products || [];
+    const vendeurId = state.serviceVendeurSelectioner?.vendeurId;
 
-  if (!vendeurId || produits.length === 0) {
-    alert("Aucun produit sélectionné.");
-    return;
-  }
+    if (!vendeurId || produits.length === 0) {
+      alert("Aucun produit sélectionné.");
+      return;
+    }
 
-  Alert.alert(
-    "Confirmation",
-    "Êtes-vous sûr de vouloir confirmer la commande ?",
-    [
-      {
-        text: "Annuler",
-        style: "cancel",
-      },
-      {
-        text: "Confirmer",
-        onPress: async () => {
-          try {
-            const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
-
-            const body = {
-              vendeurId,
-              produits: produits.map((p) => ({
-                productId: p.id,
-                nom: p.name,
-                prix: p.price,
-                productImage: p.image.uri,
-                quantity: p.quantity,
-              })),
-              type: state.serviceVendeurSelectioner?.type,
-              ServiceLivraisonPar: "VetoMoov",
-            };
-
-            const response = await fetch(`${API.BASE_URL}/api/client/creerServiceVente`, {
-              method: "POST",
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify(body),
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-              alert("Commande confirmée avec succès !");
-              // Optional: clear state or navigate somewhere
-              
-              dispatch({
-                type: "UPDATE_Service_Vendeur_Selectioner",
-                payload: {
-                  vendeurId: null,
-                  vendeur: null,
-                  type: null,
-                  serviceId: null,
-                  products: [],
-                }
-              });
-              router.push("historique");
-            } else {
-              console.error("Erreur lors de la confirmation:", result.message);
-              alert("Échec de la confirmation : " + result.message);
-            }
-          } catch (err) {
-            console.error("Erreur réseau:", err);
-            alert("Erreur réseau. Veuillez réessayer.");
-          }
+    Alert.alert(
+      "Confirmation",
+      "Êtes-vous sûr de vouloir confirmer la commande ?",
+      [
+        {
+          text: "Annuler",
+          style: "cancel",
         },
-      },
-    ]
-  );
-};
+        {
+          text: "Confirmer",
+          onPress: async () => {
+            try {
+              const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
+
+              const body = {
+                vendeurId,
+                produits: produits.map((p) => ({
+                  productId: p.id,
+                  nom: p.name,
+                  prix: p.price,
+                  productImage: p.image.uri,
+                  quantity: p.quantity,
+                })),
+                type: state.serviceVendeurSelectioner?.type,
+                ServiceLivraisonPar: "VetoMoov",
+              };
+
+              const response = await fetch(`${API.BASE_URL}/api/client/creerServiceVente`, {
+                method: "POST",
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+              });
+
+              const result = await response.json();
+
+              if (response.ok) {
+                alert("Commande confirmée avec succès !");
+                // Optional: clear state or navigate somewhere
+
+                dispatch({
+                  type: "UPDATE_Service_Vendeur_Selectioner",
+                  payload: {
+                    vendeurId: null,
+                    vendeur: null,
+                    type: null,
+                    serviceId: null,
+                    products: [],
+                  }
+                });
+                router.push("historique");
+              } else {
+                console.error("Erreur lors de la confirmation:", result.message);
+                alert("Échec de la confirmation : " + result.message);
+              }
+            } catch (err) {
+              console.error("Erreur réseau:", err);
+              alert("Erreur réseau. Veuillez réessayer.");
+            }
+          },
+        },
+      ]
+    );
+  };
 
 
   const handleRemoveItem = (productId) => {

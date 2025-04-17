@@ -26,13 +26,13 @@ export default function ServiceConsultationDetails() {
 
 
   // Fonction pour ouvrir la map native
-const openGoogleMaps = () => {
-  const latitude = consultation.docteur?.userLatitude || 36.7525; // Remplace avec les vraies coordonnées
-  const longitude = consultation.docteur?.userLongitude || 3.042; // Remplace avec les vraies coordonnées
-  const label =  "Docteur";
-  const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=${label}`;
-  Linking.openURL(url);
-};
+  const openGoogleMaps = () => {
+    const latitude = consultation.docteur?.userLatitude || 36.7525; // Remplace avec les vraies coordonnées
+    const longitude = consultation.docteur?.userLongitude || 3.042; // Remplace avec les vraies coordonnées
+    const label = "Docteur";
+    const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}&query_place_id=${label}`;
+    Linking.openURL(url);
+  };
   useEffect(() => {
     const fetchServiceDetails = async () => {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -141,27 +141,27 @@ const openGoogleMaps = () => {
         </View>
 
         {/* Action buttons */}
-        
-        <View className="mx-5 mb-16">
-  <TouchableOpacity
-    onPress={openGoogleMaps}
-    className="bg-emerald-600 py-4 rounded-lg"
-    style={{ marginBottom: 12 }}
-  >
-    <Text className="text-white text-center font-semibold text-base">
-      Ouvrir dans Google Maps
-    </Text>
-  </TouchableOpacity>
 
-  <TouchableOpacity
-    onPress={() => router.push("/veto-map")} // Remplace avec ta vraie route interne
-    className="bg-blue-600 py-4 rounded-lg"
-  >
-    <Text className="text-white text-center font-semibold text-base">
-      Voir sur la carte Veto Express
-    </Text>
-  </TouchableOpacity>
-</View>
+        <View className="mx-5 mb-16">
+          <TouchableOpacity
+            onPress={openGoogleMaps}
+            className="bg-emerald-600 py-4 rounded-lg"
+            style={{ marginBottom: 12 }}
+          >
+            <Text className="text-white text-center font-semibold text-base">
+              Ouvrir dans Google Maps
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => router.push("/veto-map")} // Remplace avec ta vraie route interne
+            className="bg-blue-600 py-4 rounded-lg"
+          >
+            <Text className="text-white text-center font-semibold text-base">
+              Voir sur la carte Veto Express
+            </Text>
+          </TouchableOpacity>
+        </View>
 
       </ScrollView>
     </SafeAreaView>

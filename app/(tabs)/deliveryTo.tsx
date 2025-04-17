@@ -185,11 +185,10 @@ export default function HomeScreen() {
             <Text className=" text-center text-xl font-medium text-gray-800">
               {state.user?.adresseMap}
             </Text>
-            <Ionicons name="chevron-down" size={24} color="black" />
+            <Ionicons name="navigate-outline" size={24} color="black" />
+
           </TouchableOpacity>
-          <TouchableOpacity>
-            <Text className="text-base font-medium text-gray-800">Filter</Text>
-          </TouchableOpacity>
+         
         </View>
       </View>
 

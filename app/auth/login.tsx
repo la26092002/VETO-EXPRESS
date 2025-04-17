@@ -105,7 +105,7 @@ export default function LoginScreen() {
                     await AsyncStorage.setItem('emailValidate', user.email);
                     // Navigate to validation screen or home
                     // router.navigate("auth/login");
-                }else if(response.status === 401 ){
+                } else if (response.status === 401) {
                     Alert.alert("Registration Failed", "This password is not correct. Please use a different password.");
                     await AsyncStorage.setItem('emailValidate', user.email);
                     // Navigate to validation screen or home

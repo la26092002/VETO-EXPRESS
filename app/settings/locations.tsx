@@ -1,55 +1,29 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, TouchableOpacity, StatusBar, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useDataContext } from '@/context/DataContext';
 import { router } from 'expo-router';
-import * as Location from 'expo-location';
-import MapView, { Marker } from 'react-native-maps'; // Import MapView and Marker
+import MapView, { Marker } from 'react-native-maps';
 
 export default function LocationScreen() {
   const { state } = useDataContext();
   const { adresseMap, userLatitude, userLongitude } = state.user;
 
-  const [currentLatitude, setCurrentLatitude] = useState(userLatitude || null);
-  const [currentLongitude, setCurrentLongitude] = useState(userLongitude || null);
-  const [locationPermissionGranted, setLocationPermissionGranted] = useState(false);
-
-  // Request permission and get the user's location if the coordinates are not available
-  useEffect(() => {
-    const getLocation = async () => {
-      try {
-        // Request location permission
-        const { status } = await Location.requestForegroundPermissionsAsync();
-
-        if (status === 'granted') {
-          const location = await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.High,
-          });
-          setCurrentLatitude(location.coords.latitude);
-          setCurrentLongitude(location.coords.longitude);
-          setLocationPermissionGranted(true);
-        } else {
-          Alert.alert('Permission Denied', 'We need location permission to fetch your location.');
-        }
-      } catch (error) {
-        console.error('Error fetching location:', error);
-        Alert.alert('Error', 'Failed to get your location.');
-      }
-    };
-
-    if (!currentLatitude || !currentLongitude) {
-      getLocation();
-    }
-  }, [currentLatitude, currentLongitude]);
-
   const handleNavigateToMap = () => {
-    if (currentLatitude && currentLongitude) {
-      const url = `https://www.google.com/maps?q=${currentLatitude},${currentLongitude}`;
+    if (userLatitude && userLongitude) {
+      const url = `https://www.google.com/maps?q=${userLatitude},${userLongitude}`;
       router.push(url);
     } else {
       Alert.alert('Location Not Available', 'User location is not available.');
     }
+  };
+
+  const handleChangeLocation = () => {
+    // You can navigate to a location picker screen here
+    // For now, just show an alert or console log
+    // Alert.alert('Change Location', 'This will allow the user to set a new location.');
+    router.push('settings/ChooseLocationScreen'); // Example if you create that screen
   };
 
   return (
@@ -72,37 +46,43 @@ export default function LocationScreen() {
 
         <Text className="text-3xl font-semibold text-gray-900 mt-6">Location Coordinates</Text>
         <Text className="text-gray-500 mt-2">
-          {currentLatitude && currentLongitude
-            ? `Latitude: ${currentLatitude}, Longitude: ${currentLongitude}`
-            : locationPermissionGranted
-              ? 'Location not available'
-              : 'Waiting for location permission...'}
+          {userLatitude && userLongitude
+            ? `Latitude: ${userLatitude}, Longitude: ${userLongitude}`
+            : 'Location not available'}
         </Text>
 
         {/* Map View */}
-        {currentLatitude && currentLongitude && (
+        {userLatitude && userLongitude && (
           <MapView
             style={{ width: '100%', height: 300, marginTop: 20 }}
             initialRegion={{
-              latitude: currentLatitude,
-              longitude: currentLongitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+              latitude: userLatitude,
+              longitude: userLongitude,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
             }}
           >
-            <Marker coordinate={{ latitude: currentLatitude, longitude: currentLongitude }} />
+            <Marker coordinate={{ latitude: userLatitude, longitude: userLongitude }} />
           </MapView>
         )}
 
-        {/* Button to open map with location */}
+        {/* View on Map Button */}
         <TouchableOpacity
           className="bg-blue-800 py-4 rounded-lg mt-6"
           onPress={handleNavigateToMap}
-          disabled={!currentLatitude || !currentLongitude}
+          disabled={!userLatitude || !userLongitude}
         >
           <Text className="text-white text-center font-medium">
-            {currentLatitude && currentLongitude ? 'View on Map' : 'Location Not Available'}
+            {userLatitude && userLongitude ? 'View on Map' : 'Location Not Available'}
           </Text>
+        </TouchableOpacity>
+
+        {/* Change Location Button */}
+        <TouchableOpacity
+          className="bg-gray-200 py-4 rounded-lg mt-3"
+          onPress={handleChangeLocation}
+        >
+          <Text className="text-gray-900 text-center font-medium">Change My Location</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

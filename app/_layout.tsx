@@ -49,42 +49,47 @@ export default function RootLayout() {
 
 
           {//With authorisation
-}
+          }
           <Stack.Screen name="settings/profileInfo" options={{ headerShown: false }} />
           <Stack.Screen name="settings/changePassword" options={{ headerShown: false }} />
           <Stack.Screen name="settings/locations" options={{ headerShown: false }} />
           <Stack.Screen name="settings/FAQScreen" options={{ headerShown: false }} />
-          
+
           <Stack.Screen name="service-details" options={{ headerShown: false }} />
-          
+
           <Stack.Screen name="topServiceDoctor" options={{ headerShown: false }} />
           <Stack.Screen name="topServiceVendeur" options={{ headerShown: false }} />
 
           <Stack.Screen name="settings/petsScreen" options={{ headerShown: false }} />
           <Stack.Screen name="settings/add-pet" options={{ headerShown: false }} />
           <Stack.Screen name="settings/add-paymentCardsScreen" options={{ headerShown: false }} />
-          
+
           <Stack.Screen name="settings/paymentMethod" options={{ headerShown: false }} />
 
 
-          
-          <Stack.Screen name="serviceConsultation/serviceConsultationDetails" options={{ headerShown: false }} />
-          
 
-          
+          <Stack.Screen name="serviceConsultation/serviceConsultationDetails" options={{ headerShown: false }} />
+
+
+
           <Stack.Screen name="serrviceVendre/ProductSelectionScreen" options={{ headerShown: false }} />
           <Stack.Screen name="serrviceVendre/PanierScreen" options={{ headerShown: false }} />
-          
-          
-
-        { // maps
-}
-<Stack.Screen name="maps/TrafficMapScreen" options={{ headerShown: false }} />
 
 
-          
-          
-          
+
+          { // maps
+          }
+          <Stack.Screen name="maps/TrafficMapScreen" options={{ headerShown: false }} />
+
+
+          <Stack.Screen name="settings/ChooseLocationScreen" options={{ headerShown: false }} />
+          <Stack.Screen name="settings/selectLocation" options={{ headerShown: false }} />
+
+
+
+
+
+
 
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />

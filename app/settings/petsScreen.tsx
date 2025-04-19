@@ -34,14 +34,14 @@ export default function PetsScreen() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch pets.");
+        throw new Error("Échec du chargement des animaux.");
       }
 
       const data = await response.json();
       setPets(data.pets || []);
     } catch (error) {
-      console.error("Error fetching pets:", error);
-      Alert.alert("Error", "Failed to load pets.");
+      console.error("Erreur lors du chargement des animaux :", error);
+      Alert.alert("Erreur", "Impossible de charger les animaux.");
     } finally {
       setIsLoading(false);
     }
@@ -53,12 +53,12 @@ export default function PetsScreen() {
 
   const deletePet = async (id: number) => {
     Alert.alert(
-      "Delete Pet",
-      "Are you sure you want to delete this pet?",
+      "Supprimer l'animal",
+      "Êtes-vous sûr de vouloir supprimer cet animal ?",
       [
-        { text: "Cancel", style: "cancel" },
+        { text: "Annuler", style: "cancel" },
         {
-          text: "Delete", style: "destructive", onPress: async () => {
+          text: "Supprimer", style: "destructive", onPress: async () => {
             try {
               const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
               const response = await fetch(`${API.BASE_URL}${API.deletePet}${id}`, {
@@ -70,14 +70,14 @@ export default function PetsScreen() {
               });
 
               if (!response.ok) {
-                throw new Error("Failed to delete pet.");
+                throw new Error("Échec de la suppression de l'animal.");
               }
 
               setPets((prev) => prev.filter((pet) => pet.petId !== id));
-              Alert.alert("Deleted", "Pet has been deleted successfully.");
+              Alert.alert("Supprimé", "L'animal a été supprimé avec succès.");
             } catch (error) {
-              console.error("Error deleting pet:", error);
-              Alert.alert("Error", "Failed to delete pet.");
+              console.error("Erreur lors de la suppression :", error);
+              Alert.alert("Erreur", "Impossible de supprimer l'animal.");
             }
           }
         },
@@ -89,24 +89,24 @@ export default function PetsScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
 
-      {/* Header */}
+      {/* En-tête */}
       <View className="flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="text-lg font-medium text-center flex-1">My Pets</Text>
+        <Text className="text-lg font-medium text-center flex-1">Mes Animaux</Text>
         <View className="w-6" />
       </View>
 
       <View className="px-5 mt-4">
-        <Text className="text-3xl font-semibold text-gray-900">Pets List</Text>
-        <Text className="text-gray-500 mb-6">Manage the animals associated with your account</Text>
+        <Text className="text-3xl font-semibold text-gray-900">Liste des Animaux</Text>
+        <Text className="text-gray-500 mb-6">Gérez les animaux associés à votre compte</Text>
 
         <TouchableOpacity
           onPress={() => router.push('settings/add-pet')}
           className="bg-blue-800 py-4 rounded-lg mb-4"
         >
-          <Text className="text-white text-center font-medium">+ Add New Pet</Text>
+          <Text className="text-white text-center font-medium">+ Ajouter un animal</Text>
         </TouchableOpacity>
       </View>
 
@@ -127,8 +127,8 @@ export default function PetsScreen() {
               </View>
               <View className="flex-1">
                 <Text className="text-lg font-semibold text-gray-900">{item.petName}</Text>
-                <Text className="text-sm text-gray-500">Type: {item.petType}</Text>
-                <Text className="text-sm text-gray-500">Age: {item.petAge}</Text>
+                <Text className="text-sm text-gray-500">Type : {item.petType}</Text>
+                <Text className="text-sm text-gray-500">Âge : {item.petAge}</Text>
               </View>
               <TouchableOpacity onPress={() => deletePet(item.petId)}>
                 <Ionicons name="trash-outline" size={24} color="#dc2626" />

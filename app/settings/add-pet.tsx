@@ -21,15 +21,15 @@ export default function AddPetScreen() {
 
   const handleAddPet = async () => {
     if (!name || !type || !age) {
-      Alert.alert("Error", "All fields are required.");
+      Alert.alert("Erreur", "Tous les champs sont obligatoires.");
       return;
     }
-  
+
     setIsLoading(true);
-  
+
     try {
       const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
-  
+
       const response = await fetch(`${API.BASE_URL}${API.addPet}`, {
         method: "POST",
         headers: {
@@ -42,91 +42,90 @@ export default function AddPetScreen() {
           petAge: age,
         }),
       });
-  
+
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Something went wrong");
+        throw new Error(errorData.message || "Une erreur s'est produite");
       }
-  
+
       const result = await response.json();
-      console.log("API Response:", result);
-  
-      Alert.alert("Success", "Pet added successfully!");
+      console.log("Réponse API :", result);
+
+      Alert.alert("Succès", "Animal ajouté avec succès !");
       router.back();
     } catch (error) {
-      console.error("Add pet error:", error);
-      Alert.alert("Error", error.message || "Failed to add pet. Try again later.");
+      console.error("Erreur ajout animal :", error);
+      Alert.alert("Erreur", error.message || "Échec de l'ajout de l'animal. Veuillez réessayer.");
     } finally {
       setIsLoading(false);
     }
   };
-  
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
 
-      {/* Header */}
+      {/* En-tête */}
       <View className="flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="text-lg font-medium text-center flex-1">Add Pet</Text>
+        <Text className="text-lg font-medium text-center flex-1">Ajouter un animal</Text>
         <View className="w-6" />
       </View>
 
-      {/* Form */}
+      {/* Formulaire */}
       <View className="px-5 mt-4">
-        <Text className="text-3xl font-semibold text-gray-900">Add a New Pet</Text>
-        <Text className="text-gray-500 mb-6">Please enter your pet's information below.</Text>
+        <Text className="text-3xl font-semibold text-gray-900">Nouvel animal</Text>
+        <Text className="text-gray-500 mb-6">Merci de remplir les informations de votre animal.</Text>
 
-        {/* Pet Name */}
+        {/* Nom de l’animal */}
         <View className="mb-5">
-          <Text className="text-xs text-gray-400 mb-1">PET NAME</Text>
+          <Text className="text-xs text-gray-400 mb-1">NOM DE L'ANIMAL</Text>
           <View className="flex-row items-center border-b border-gray-300 pb-2">
             <TextInput
               className="flex-1 text-base text-gray-800"
               value={name}
               onChangeText={setName}
-              placeholder="Enter pet's name"
+              placeholder="Entrez le nom de l’animal"
             />
           </View>
         </View>
 
-        {/* Pet Type */}
+        {/* Type de l’animal */}
         <View className="mb-5">
-          <Text className="text-xs text-gray-400 mb-1">PET TYPE</Text>
+          <Text className="text-xs text-gray-400 mb-1">TYPE D'ANIMAL</Text>
           <View className="flex-row items-center border-b border-gray-300 pb-2">
             <TextInput
               className="flex-1 text-base text-gray-800"
               value={type}
               onChangeText={setType}
-              placeholder="e.g. Dog, Cat"
+              placeholder="ex. Chien, Chat"
             />
           </View>
         </View>
 
-        {/* Pet Age */}
+        {/* Âge de l’animal */}
         <View className="mb-5">
-          <Text className="text-xs text-gray-400 mb-1">PET AGE</Text>
+          <Text className="text-xs text-gray-400 mb-1">ÂGE DE L'ANIMAL</Text>
           <View className="flex-row items-center border-b border-gray-300 pb-2">
             <TextInput
               className="flex-1 text-base text-gray-800"
               value={age}
               onChangeText={setAge}
-              placeholder="e.g. 2 years"
+              placeholder="ex. 2 ans"
             />
           </View>
         </View>
 
-        {/* Submit Button */}
+        {/* Bouton de validation */}
         <TouchableOpacity
           className="bg-blue-800 py-4 rounded-lg mb-4"
           onPress={handleAddPet}
           disabled={isLoading}
         >
           <Text className="text-white text-center font-medium">
-            {isLoading ? "Saving..." : "ADD PET"}
+            {isLoading ? "Enregistrement..." : "AJOUTER L'ANIMAL"}
           </Text>
         </TouchableOpacity>
       </View>

@@ -17,39 +17,34 @@ import { useDataContext } from "@/context/DataContext";
 
 export default function AccountSettingsScreen() {
   const { state, dispatch } = useDataContext();
-  // State for toggle switches
   const [pushNotifications, setPushNotifications] = useState(state.user?.push_Notification || false);
   const [smsNotifications, setSmsNotifications] = useState(state.user?.smsNotification || false);
   const [promotionalNotifications, setPromotionalNotifications] = useState(state.user?.promotional_Notification || false);
 
-
-  // Settings categories
   const accountSettings = [
     {
       id: "profile",
       icon: "person-outline",
-      title: "Profile Information",
-      description: "Change your account information",
+      title: "Informations du profil",
+      description: "Modifier les informations de votre compte",
     },
     {
       id: "password",
       icon: "lock-closed-outline",
-      title: "Change Password",
-      description: "Change your password",
+      title: "Changer le mot de passe",
+      description: "Modifier votre mot de passe",
     },
-
     {
       id: "locations",
       icon: "location-outline",
-      title: "Locations",
-      description: "Add or remove your delivery locations",
+      title: "Emplacements",
+      description: "Ajouter ou supprimer vos lieux de livraison",
     },
-    
     {
       id: "pets",
       icon: "paw-outline",
-      title: "My Pets",
-      description: "Add or update information about your pets",
+      title: "Mes animaux",
+      description: "Ajouter ou modifier les informations de vos animaux",
     },
   ];
 
@@ -57,8 +52,8 @@ export default function AccountSettingsScreen() {
     {
       id: "push",
       icon: "notifications-outline",
-      title: "Push Notifications",
-      description: "For daily update you will get it",
+      title: "Notifications push",
+      description: "Recevez des mises à jour quotidiennes",
       value: pushNotifications,
       onValueChange: async () => {
         try {
@@ -66,11 +61,10 @@ export default function AccountSettingsScreen() {
             type: "UPDATE_USER",
             payload: { push_Notification: !pushNotifications },
           });
-          let newNotification = !pushNotifications
-          setPushNotifications((prev) => !prev)
+          let newNotification = !pushNotifications;
+          setPushNotifications((prev) => !prev);
 
-
-          const token = await AsyncStorage.getItem(AsyncStorageValue.userToken)
+          const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
           const response = await fetch(`${API.BASE_URL}${API.UPDATE_PROFILE}`, {
             method: "PUT",
             headers: {
@@ -83,31 +77,29 @@ export default function AccountSettingsScreen() {
           });
 
           if (!response.ok) {
-            setPushNotifications((prev) => !prev)
-            throw new Error("Failed to update push notification setting");
+            setPushNotifications((prev) => !prev);
+            throw new Error("Échec de la mise à jour des notifications push");
           }
         } catch (error) {
-          console.error("Error updating push notification:", error);
+          console.error("Erreur lors de la mise à jour des notifications push :", error);
         }
-
       },
     },
     {
       id: "sms",
       icon: "notifications-outline",
-      title: "SMS Notifications",
-      description: "For daily update you will get it",
+      title: "Notifications SMS",
+      description: "Recevez des mises à jour quotidiennes",
       value: smsNotifications,
       onValueChange: async () => {
         dispatch({
           type: "UPDATE_USER",
           payload: { smsNotification: !smsNotifications },
         });
-        let newNotification = !smsNotifications
-        setSmsNotifications((prev) => !prev)
+        let newNotification = !smsNotifications;
+        setSmsNotifications((prev) => !prev);
 
-
-        const token = await AsyncStorage.getItem(AsyncStorageValue.userToken)
+        const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
         const response = await fetch(`${API.BASE_URL}${API.UPDATE_PROFILE}`, {
           method: "PUT",
           headers: {
@@ -120,29 +112,26 @@ export default function AccountSettingsScreen() {
         });
 
         if (!response.ok) {
-          setSmsNotifications((prev) => !prev)
-          throw new Error("Failed to update push notification setting");
+          setSmsNotifications((prev) => !prev);
+          throw new Error("Échec de la mise à jour des notifications SMS");
         }
-
       },
     },
     {
       id: "promo",
       icon: "notifications-outline",
-      title: "Promotional Notifications",
-      description: "For daily update you will get it",
+      title: "Notifications promotionnelles",
+      description: "Recevez des offres et promotions",
       value: promotionalNotifications,
       onValueChange: async () => {
         dispatch({
           type: "UPDATE_USER",
           payload: { promotional_Notification: !promotionalNotifications },
         });
-        let newNotification = !promotionalNotifications
-        setPromotionalNotifications((prev) => !prev)
+        let newNotification = !promotionalNotifications;
+        setPromotionalNotifications((prev) => !prev);
 
-
-
-        const token = await AsyncStorage.getItem(AsyncStorageValue.userToken)
+        const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
         const response = await fetch(`${API.BASE_URL}${API.UPDATE_PROFILE}`, {
           method: "PUT",
           headers: {
@@ -155,10 +144,9 @@ export default function AccountSettingsScreen() {
         });
 
         if (!response.ok) {
-          setPromotionalNotifications((prev) => !prev)
-          throw new Error("Failed to update push notification setting");
+          setPromotionalNotifications((prev) => !prev);
+          throw new Error("Échec de la mise à jour des notifications promotionnelles");
         }
-
       },
     },
   ];
@@ -167,24 +155,23 @@ export default function AccountSettingsScreen() {
     {
       id: "rate",
       icon: "star-outline",
-      title: "Rate Us",
-      description: "Rate us playstore, appstor",
+      title: "Noter l'application",
+      description: "Évaluez-nous sur le Play Store ou l'App Store",
     },
     {
       id: "faq",
       icon: "document-text-outline",
       title: "FAQ",
-      description: "Frequently asked questions",
+      description: "Questions fréquemment posées",
     },
     {
       id: "logout",
       icon: "log-out-outline",
-      title: "Logout",
+      title: "Déconnexion",
       description: "",
     },
   ];
 
-  // Render a setting list item with chevron
   const renderSettingItem = (item) => (
     <TouchableOpacity
       key={item.id}
@@ -192,57 +179,41 @@ export default function AccountSettingsScreen() {
       onPress={() => {
         if (item.id === "logout") {
           Alert.alert(
-            "Logout",
-            "Are you sure you want to logout?",
+            "Déconnexion",
+            "Voulez-vous vraiment vous déconnecter ?",
             [
+              { text: "Annuler", style: "cancel" },
               {
-                text: "Cancel",
-                style: "cancel",
-              },
-              {
-                text: "Logout",
+                text: "Se déconnecter",
                 onPress: async () => {
                   try {
                     await AsyncStorage.removeItem(AsyncStorageValue.userToken);
-                    dispatch({ type: "RESET" }); // <-- Optional: If you have a RESET type to clear all user data
                     router.navigate('auth/login');
+                    dispatch({ type: "RESET" });
+                   
                   } catch (error) {
-                    console.error("Logout Error:", error);
+                    console.error("Erreur lors de la déconnexion:", error);
+                    Alert.alert("Erreur", "Impossible de vous déconnecter, essayez à nouveau.");
                   }
                 },
-                style: "destructive",
               },
-            ],
-            { cancelable: true }
+            ]
           );
-        } else if (item.id === "profile") {
+        }
+        else if (item.id === "profile") {
           router.navigate('settings/profileInfo');
-          console.log("profileInfo")
         } else if (item.id === "password") {
           router.navigate('settings/changePassword');
-          console.log("changePassword")
-
         } else if (item.id === "payment") {
           router.navigate('settings/paymentMethod');
-          console.log("paymentMethod")
         } else if (item.id === "locations") {
           router.navigate('settings/locations');
-          console.log("paymentMethod")
         } else if (item.id === "faq") {
           router.navigate('settings/FAQScreen');
-          console.log("FAQScreen")
-        }else if(item.id === "payment"){
-          //settings/paymentCardsScreen
-          router.navigate('settings/paymentMethod');
-          console.log("paymentCardsScreen")
-
-        }else if(item.id === "pets"){
+        } else if (item.id === "pets") {
           router.navigate('settings/petsScreen');
-          console.log("petsScreen")
-          
         } else {
-          // Navigate or handle other settings
-          console.log(`Pressed ${item.title}`);
+          console.log(`Appuyé sur ${item.title}`);
         }
       }}
     >
@@ -261,7 +232,6 @@ export default function AccountSettingsScreen() {
     </TouchableOpacity>
   );
 
-  // Render a notification setting with toggle
   const renderNotificationItem = (item) => (
     <View
       key={item.id}
@@ -290,20 +260,17 @@ export default function AccountSettingsScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
       <ScrollView className="flex-1 px-6">
-        {/* Header */}
         <View className="mt-4 mb-2">
           <Text className="text-3xl font-semibold text-gray-900">
-            Account Settings
+            Paramètres du compte
           </Text>
           <Text className="text-gray-500 mt-1">
-            Update your settings like notifications, payments, profile edit etc.
+            Modifiez vos paramètres tels que les notifications, le profil, etc.
           </Text>
         </View>
 
-        {/* Account Settings */}
         <View className="mt-4">{accountSettings.map(renderSettingItem)}</View>
 
-        {/* Notifications */}
         <View className="mt-8">
           <Text className="text-base font-medium text-gray-500 mb-2">
             NOTIFICATIONS
@@ -311,9 +278,8 @@ export default function AccountSettingsScreen() {
           {notificationSettings.map(renderNotificationItem)}
         </View>
 
-        {/* More */}
         <View className="mt-8 mb-8">
-          <Text className="text-base font-medium text-gray-500 mb-2">MORE</Text>
+          <Text className="text-base font-medium text-gray-500 mb-2">PLUS</Text>
           {moreSettings.map(renderSettingItem)}
         </View>
       </ScrollView>

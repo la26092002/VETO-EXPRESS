@@ -39,14 +39,16 @@ export default function RootLayout() {
 
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <DataProvider>
-        <Stack>
+        <Stack  screenOptions={{ gestureEnabled: false }}>
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="auth/createAccount" options={{ headerShown: false }} />
           <Stack.Screen name="auth/login" options={{ headerShown: false }} />
           <Stack.Screen name="auth/forgetPassword" options={{ headerShown: false }} />
           <Stack.Screen name="auth/verifyCode" options={{ headerShown: false }} />
           <Stack.Screen name="auth/validateAccount" options={{ headerShown: false }} />
-
+          <Stack.Screen name="auth/ChooseLocationScreen" options={{ headerShown: false }} />
+          <Stack.Screen name="auth/selectLocation" options={{ headerShown: false }} />
+          
 
           {//With authorisation
           }

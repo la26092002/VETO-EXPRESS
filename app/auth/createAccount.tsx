@@ -18,26 +18,20 @@ const BASE_URL = API.BASE_URL;
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CreateAccountScreen() {
-  // State for form inputs
-  const [fullName, setFullName] = useState("ouiam");
-  const [email, setEmail] = useState("ouiam.ouiam@com");
+  const [fullName, setFullName] = useState("user");
+  const [email, setEmail] = useState("user@gmail.com");
   const [phoneNumber, setPhoneNumber] = useState("+213798599533");
   const [password, setPassword] = useState("******");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false); // State for loading
-
-  // Toggle password visibility
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-
-  // Handle registration
-  // Handle registration
   const handleRegister = async () => {
     if (!fullName || !email || !phoneNumber || !password) {
-      Alert.alert("Error", "All fields are required.");
+      Alert.alert("Erreur", "Tous les champs sont obligatoires.");
       return;
     }
 
@@ -54,7 +48,7 @@ export default function CreateAccountScreen() {
         typeActeur: Acteur.Client
       };
 
-      const response = await fetch(`${BASE_URL}${API.REGISTER}`, { // Replace with your actual API endpoint
+      const response = await fetch(`${BASE_URL}${API.REGISTER}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,27 +60,22 @@ export default function CreateAccountScreen() {
 
       if (!response.ok) {
         if (response.status === 400 && data.message === 'Email already in use') {
-          Alert.alert("Registration Failed", "This email is already registered. Please use a different email or login.");
+          Alert.alert("Échec de l'inscription", "Cet e-mail est déjà utilisé. Veuillez en utiliser un autre ou vous connecter.");
           await AsyncStorage.setItem('emailValidate', user.email);
-          // Navigate to validation screen or home
           router.navigate("auth/login");
         } else {
-          Alert.alert("Registration Failed", data.message || "Registration failed. Please try again.");
+          Alert.alert("Échec de l'inscription", data.message || "Une erreur s'est produite. Veuillez réessayer.");
         }
         return;
       }
 
-      // Success case
-      Alert.alert("Success", "Account created successfully!");
-
+      Alert.alert("Succès", "Compte créé avec succès !");
       await AsyncStorage.setItem('emailValidate', user.email);
-
-      // Navigate to validation screen or home
       router.navigate("auth/validateAccount");
 
     } catch (error) {
-      console.error('Registration error:', error);
-      Alert.alert("Registration Failed", "Network error. Please check your connection and try again.");
+      console.error('Erreur lors de l\'inscription :', error);
+      Alert.alert("Échec de l'inscription", "Erreur réseau. Veuillez vérifier votre connexion.");
     } finally {
       setIsLoading(false);
     }
@@ -96,38 +85,34 @@ export default function CreateAccountScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
 
-      {/* Header with back button and title */}
+      {/* Header */}
       <View className="flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity onPress={() => router.navigate('auth/login')}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
         <Text className="text-lg font-medium text-center flex-1">
-          Create Account
+          Créer un compte
         </Text>
         <View className="w-6">
-          <Text className="text-lg font-medium text-center flex-1 text-transparent">
-            Empty view for centering
-          </Text>
+          <Text className="text-transparent">.</Text>
         </View>
       </View>
 
-      {/* Create Account Section */}
       <View className="px-5 mt-4">
         <Text className="text-3xl font-semibold text-gray-900">
-          Create Account
+          Créer un compte
         </Text>
         <View className="flex-row items-center mt-1 mb-6 flex-wrap">
           <Text className="text-gray-500">
-            Enter your Name, Email, Phone Number, and Password for sign up.
+            Entrez votre nom, e-mail, numéro de téléphone et mot de passe.
           </Text>
           <TouchableOpacity onPress={() => router.navigate('auth/login')}>
-            <Text className="text-blue-600 ml-1">Already have an account?</Text>
+            <Text className="text-blue-600 ml-1">Déjà un compte ?</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Full Name Input */}
         <View className="mb-5">
-          <Text className="text-xs text-gray-400 mb-1">FULL NAME</Text>
+          <Text className="text-xs text-gray-400 mb-1">NOM COMPLET</Text>
           <View className="flex-row items-center border-b border-gray-300 pb-2">
             <TextInput
               className="flex-1 text-base text-gray-800"
@@ -138,9 +123,8 @@ export default function CreateAccountScreen() {
           </View>
         </View>
 
-        {/* Email Input */}
         <View className="mb-5">
-          <Text className="text-xs text-gray-400 mb-1">EMAIL ADDRESS</Text>
+          <Text className="text-xs text-gray-400 mb-1">ADRESSE E-MAIL</Text>
           <View className="flex-row items-center border-b border-gray-300 pb-2">
             <TextInput
               className="flex-1 text-base text-gray-800"
@@ -153,9 +137,8 @@ export default function CreateAccountScreen() {
           </View>
         </View>
 
-        {/* Phone Number Input */}
         <View className="mb-5">
-          <Text className="text-xs text-gray-400 mb-1">PHONE NUMBER</Text>
+          <Text className="text-xs text-gray-400 mb-1">NUMÉRO DE TÉLÉPHONE</Text>
           <View className="flex-row items-center border-b border-gray-300 pb-2">
             <TextInput
               className="flex-1 text-base text-gray-800"
@@ -167,10 +150,9 @@ export default function CreateAccountScreen() {
           </View>
         </View>
 
-        {/* Password Input */}
         <View className="mb-8">
           <View className="flex flex-row items-center justify-between">
-            <Text className="text-xs text-gray-400 mb-1">PASSWORD</Text>
+            <Text className="text-xs text-gray-400 mb-1">MOT DE PASSE</Text>
             <TouchableOpacity onPress={togglePasswordVisibility}>
               <Ionicons name={showPassword ? "eye" : "eye-off"} size={20} color="#9ca3af" />
             </TouchableOpacity>
@@ -182,10 +164,9 @@ export default function CreateAccountScreen() {
               onChangeText={setPassword}
               secureTextEntry={!showPassword}
             />
-            <Ionicons name="checkmark" size={20} color="#205781" className="ml-2" />
+            <Ionicons name="checkmark" size={20} color="#205781" />
           </View>
         </View>
-
 
         <TouchableOpacity
           className="bg-blue-800 py-4 rounded-lg mb-4"
@@ -195,20 +176,16 @@ export default function CreateAccountScreen() {
           {isLoading ? (
             <ActivityIndicator color="white" />
           ) : (
-            <Text className="text-white text-center font-medium">SIGN UP</Text>
+            <Text className="text-white text-center font-medium">S'INSCRIRE</Text>
           )}
         </TouchableOpacity>
 
-
-        {/* Terms and Conditions */}
         <Text className="text-gray-500 text-center text-sm mb-6">
-          By signing up, you agree to our Terms, Conditions & Privacy Policy.
+          En vous inscrivant, vous acceptez nos Conditions Générales et notre Politique de Confidentialité.
         </Text>
 
-        {/* Or Divider */}
-        <Text className="text-gray-500 text-center text-sm mb-6">Or</Text>
+        <Text className="text-gray-500 text-center text-sm mb-6">Ou</Text>
 
-        {/* Social Login Buttons */}
         <TouchableOpacity className="flex-row bg-blue-600 py-3 rounded-lg mb-3 flex justify-around items-center">
           <View className="bg-white p-1 rounded-sm mr-2">
             <Image
@@ -217,7 +194,7 @@ export default function CreateAccountScreen() {
               resizeMode="cover"
             />
           </View>
-          <Text className="text-white font-medium">CONNECT WITH FACEBOOK</Text>
+          <Text className="text-white font-medium">SE CONNECTER AVEC FACEBOOK</Text>
         </TouchableOpacity>
 
         <TouchableOpacity className="flex-row bg-blue-500 py-3 rounded-lg flex justify-around items-center">
@@ -228,7 +205,7 @@ export default function CreateAccountScreen() {
               resizeMode="cover"
             />
           </View>
-          <Text className="text-white font-medium">CONNECT WITH GOOGLE</Text>
+          <Text className="text-white font-medium">SE CONNECTER AVEC GOOGLE</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

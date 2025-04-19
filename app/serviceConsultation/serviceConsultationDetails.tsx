@@ -86,7 +86,20 @@ export default function ServiceConsultationDetails() {
   const infoRows = [
     { label: "Docteur", value: `${consultation.docteur?.nom}` },
     { label: "Email", value: consultation.docteur?.email },
-    { label: "Téléphone", value: consultation.docteur?.telephone },
+    {
+      label: "Téléphone",
+      value: (
+        <TouchableOpacity 
+      onPress={() => Linking.openURL(`tel:${consultation.docteur?.telephone}`)}
+      className="flex-row items-center space-x-2"
+    >
+      <Ionicons name="call" size={18} color="#4CAF50" />
+      <Text className="text-green-600 font-semibold ">
+        {consultation.docteur?.telephone}
+      </Text>
+    </TouchableOpacity>
+      ),
+    },
     { label: "Service", value: consultation?.type },
     { label: "Statut", value: consultation?.status },
     { label: "Livraison", value: consultation?.ServiceLivraisonPar },

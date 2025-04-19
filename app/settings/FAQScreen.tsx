@@ -14,7 +14,7 @@ export default function FAQScreen() {
     if (supported) {
       await Linking.openURL(url);
     } else {
-      Alert.alert('Error', 'Calling is not supported on this device.');
+      Alert.alert('Erreur', "L'appel n'est pas pris en charge sur cet appareil.");
     }
   };
 
@@ -22,7 +22,7 @@ export default function FAQScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
 
-      {/* Header */}
+      {/* En-tête */}
       <View className="flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="black" />
@@ -31,19 +31,19 @@ export default function FAQScreen() {
         <View className="w-6" />
       </View>
 
-      {/* Content */}
+      {/* Contenu */}
       <View className="px-5 mt-6">
-        <Text className="text-3xl font-semibold text-gray-900">Support Information</Text>
+        <Text className="text-3xl font-semibold text-gray-900">Informations de support</Text>
         <Text className="text-gray-500 mt-4 text-base leading-relaxed">
-          Currently, our support is available via phone. If you need any help, feel free to contact us directly.
+          Actuellement, notre support est disponible par téléphone. Si vous avez besoin d'aide, n'hésitez pas à nous contacter directement.
         </Text>
 
-        {/* Clickable phone box */}
+        {/* Boîte cliquable avec numéro */}
         <TouchableOpacity
           onPress={handleCall}
           className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-xl"
         >
-          <Text className="text-blue-900 font-medium text-lg">Phone Number:</Text>
+          <Text className="text-blue-900 font-medium text-lg">Numéro de téléphone :</Text>
           <Text className="text-blue-800 mt-2 text-xl font-bold underline">{phoneNumber}</Text>
         </TouchableOpacity>
       </View>

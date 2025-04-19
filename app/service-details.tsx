@@ -16,6 +16,7 @@ import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native"; // Add this import at the top
 
+import { useFocusEffect } from '@react-navigation/native'; // Import this
 
 const serviceInfo = {
   header: {
@@ -61,26 +62,30 @@ export default function VeterinaryServicesScreen() {
   const [selectedService, setSelectedService] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchPets = async () => {
-      try {
-        const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
-        const res = await fetch(`${API.BASE_URL}${API.getAllPets}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const data = await res.json();
-        setPets(data.pets || []);
-      } catch (err) {
-        console.error("Error fetching pets:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPets();
-  }, []);
+  // Inside your component
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchPets = async () => {
+        try {
+          const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
+          const res = await fetch(`${API.BASE_URL}${API.getAllPets}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const data = await res.json();
+          setPets(data.pets || []);
+        } catch (err) {
+          console.error("Error fetching pets:", err);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchPets();
+    }, []) // Empty dependency array ensures this only runs when the screen is focused
+  );
+  
 
   const handleServiceSelection = (category) => {
     setSelectedService(category.name);

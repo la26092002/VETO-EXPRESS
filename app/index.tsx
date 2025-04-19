@@ -10,14 +10,13 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-
-// Get screen dimensions for responsive design
+// Obtenir les dimensions de l'écran pour un design réactif
 export default function WelcomeScreen() {
   return (
     <SafeAreaView className="flex-1 bg-white ">
       <StatusBar barStyle="dark-content" />
 
-      {/* Content Container */}
+      {/* Conteneur de contenu */}
       <View className="flex-1 items-center justify-evenly px-8 relative">
         <Image
           source={require("@/assets/images/circle.png")}
@@ -34,21 +33,21 @@ export default function WelcomeScreen() {
           className="h-32 w-32 object-contain"
         />
 
-        {/* Welcome Text */}
+        {/* Texte de bienvenue */}
         <View className="items-center mb-16">
           <Text className="text-2xl font-semibold text-gray-800 mb-4">
-            Welcome
+            Bienvenue
           </Text>
           <Text className="text-base text-gray-700 text-center ">
-            It's a pleasure to meet you. We are excited that you're here so
-            let's get started!
+            C'est un plaisir de vous rencontrer. Nous sommes ravis que vous soyez ici,
+            alors commençons !
           </Text>
         </View>
 
-        {/* Get Started Button */}
-        <TouchableOpacity onPress={() => router.navigate('auth//login')} className="bg-blue-800 py-4 px-8 rounded-lg w-full">
+        {/* Bouton Commencer */}
+        <TouchableOpacity onPress={() => router.navigate('auth/login')} className="bg-blue-800 py-4 px-8 rounded-lg w-full">
           <Text className="text-white text-center font-medium">
-            GET STARTED
+            COMMENCER
           </Text>
         </TouchableOpacity>
       </View>

@@ -84,7 +84,7 @@ export default function TabTwoScreen() {
     <SafeAreaView className="flex-1 bg-white">
       <View className="flex-1 px-4">
         <Text className="text-3xl font-bold mt-6 mb-8 text-gray-900">
-          Our Service
+        Notre service
         </Text>
 
         <FlatList

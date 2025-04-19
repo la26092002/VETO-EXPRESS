@@ -8,6 +8,15 @@ import MapView, { Marker } from 'react-native-maps';
 
 export default function LocationScreen() {
   const { state } = useDataContext();
+  const user = state?.user;
+
+if (!user) {
+  return (
+    <SafeAreaView className="flex-1 justify-center items-center bg-white">
+      <Text className="text-gray-700 text-center">Chargement de la localisation...</Text>
+    </SafeAreaView>
+  );
+}
   const { adresseMap, userLatitude, userLongitude } = state.user;
 
   const handleNavigateToMap = () => {
@@ -15,43 +24,40 @@ export default function LocationScreen() {
       const url = `https://www.google.com/maps?q=${userLatitude},${userLongitude}`;
       router.push(url);
     } else {
-      Alert.alert('Location Not Available', 'User location is not available.');
+      Alert.alert('Localisation non disponible', 'La localisation de l’utilisateur est indisponible.');
     }
   };
 
   const handleChangeLocation = () => {
-    // You can navigate to a location picker screen here
-    // For now, just show an alert or console log
-    // Alert.alert('Change Location', 'This will allow the user to set a new location.');
-    router.push('settings/ChooseLocationScreen'); // Example if you create that screen
+    router.push('settings/ChooseLocationScreen');
   };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
 
-      {/* Header with back button */}
+      {/* En-tête avec bouton retour */}
       <View className="flex-row items-center justify-between px-4 py-3">
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="text-lg font-medium text-center flex-1">My Location</Text>
+        <Text className="text-lg font-medium text-center flex-1">Ma Localisation</Text>
         <View className="w-6" />
       </View>
 
-      {/* Content Section */}
+      {/* Contenu */}
       <View className="px-5 mt-4">
-        <Text className="text-3xl font-semibold text-gray-900">My Address</Text>
-        <Text className="text-gray-500 mt-2">{adresseMap || 'Address not available'}</Text>
+        <Text className="text-3xl font-semibold text-gray-900">Mon Adresse</Text>
+        <Text className="text-gray-500 mt-2">{adresseMap || 'Adresse non disponible'}</Text>
 
-        <Text className="text-3xl font-semibold text-gray-900 mt-6">Location Coordinates</Text>
+        <Text className="text-3xl font-semibold text-gray-900 mt-6">Coordonnées GPS</Text>
         <Text className="text-gray-500 mt-2">
           {userLatitude && userLongitude
-            ? `Latitude: ${userLatitude}, Longitude: ${userLongitude}`
-            : 'Location not available'}
+            ? `Latitude : ${userLatitude}, Longitude : ${userLongitude}`
+            : 'Localisation non disponible'}
         </Text>
 
-        {/* Map View */}
+        {/* Carte */}
         {userLatitude && userLongitude && (
           <MapView
             style={{ width: '100%', height: 300, marginTop: 20 }}
@@ -66,23 +72,23 @@ export default function LocationScreen() {
           </MapView>
         )}
 
-        {/* View on Map Button */}
+        {/* Bouton Voir sur la carte */}
         <TouchableOpacity
           className="bg-blue-800 py-4 rounded-lg mt-6"
           onPress={handleNavigateToMap}
           disabled={!userLatitude || !userLongitude}
         >
           <Text className="text-white text-center font-medium">
-            {userLatitude && userLongitude ? 'View on Map' : 'Location Not Available'}
+            {userLatitude && userLongitude ? 'Voir sur la carte' : 'Localisation non disponible'}
           </Text>
         </TouchableOpacity>
 
-        {/* Change Location Button */}
+        {/* Bouton Modifier la localisation */}
         <TouchableOpacity
           className="bg-gray-200 py-4 rounded-lg mt-3"
           onPress={handleChangeLocation}
         >
-          <Text className="text-gray-900 text-center font-medium">Change My Location</Text>
+          <Text className="text-gray-900 text-center font-medium">Modifier ma localisation</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -5,38 +5,82 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
+  Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import { API } from "@/constants/Backend";
 
 export default function ForgotPasswordScreen() {
-  // State for email input
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleResetPassword = async () => {
+    if (!email.trim()) {
+      Alert.alert("Erreur de validation", "Veuillez saisir votre adresse e-mail.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `${API.BASE_URL}/api/auth/send-validation-code`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        Alert.alert("Succès", data.message || "Vérifiez votre boîte mail pour le code de réinitialisation.");
+        router.push({
+          pathname: "auth/verifyCode",
+          params: { validationToken: data.validationToken },
+        });
+
+      } else {
+        Alert.alert("Erreur", data.message || "Une erreur s'est produite.");
+      }
+    } catch (error) {
+      Alert.alert("Erreur réseau", "Échec de la connexion au serveur.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white">
       <StatusBar barStyle="dark-content" />
 
-      {/* Header with back button and title */}
+      {/* En-tête */}
       <View className="flex-row items-center justify-between px-4 py-3">
-        <TouchableOpacity onPress={() => router.navigate('auth/login')}>
+        <TouchableOpacity onPress={() => router.navigate("auth/login")}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="text-lg font-medium text-center flex-1">Forgot Password</Text>
+        <Text className="text-lg font-medium text-center flex-1">
+          Mot de passe oublié
+        </Text>
         <View className="w-6" />
       </View>
 
-      {/* Forgot Password Section */}
+      {/* Contenu */}
       <View className="px-5 mt-4">
-        <Text className="text-3xl font-semibold text-gray-900">Reset Password</Text>
-        <View className="flex-row items-center mt-1 mb-6 flex-wrap">
-          <Text className="text-gray-500">Enter your email to receive password reset instructions.</Text>
-        </View>
+        <Text className="text-3xl font-semibold text-gray-900">
+          Réinitialiser le mot de passe
+        </Text>
+        <Text className="text-gray-500 mt-1 mb-6">
+          Entrez votre e-mail pour recevoir les instructions de réinitialisation.
+        </Text>
 
-        {/* Email Input */}
+        {/* Champ e-mail */}
         <View className="mb-8">
-          <Text className="text-xs text-gray-400 mb-1">EMAIL ADDRESS</Text>
+          <Text className="text-xs text-gray-400 mb-1">ADRESSE E-MAIL</Text>
           <View className="flex-row items-center border-b border-gray-300 pb-2">
             <TextInput
               className="flex-1 text-base text-gray-800"
@@ -44,20 +88,25 @@ export default function ForgotPasswordScreen() {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
-              placeholder="Enter your email"
+              placeholder="Entrez votre adresse e-mail"
             />
           </View>
         </View>
 
-        {/* Reset Password Button */}
-        <TouchableOpacity className="bg-blue-800 py-4 rounded-lg mb-4" 
-        onPress={() => router.navigate('auth/verifyCode')} >
-          <Text className="text-white text-center font-medium">RESET PASSWORD</Text>
+        {/* Bouton réinitialisation */}
+        <TouchableOpacity
+          className="bg-blue-800 py-4 rounded-lg mb-4"
+          onPress={handleResetPassword}
+          disabled={loading}
+        >
+          <Text className="text-white text-center font-medium">
+            {loading ? "Veuillez patienter..." : "RÉINITIALISER LE MOT DE PASSE"}
+          </Text>
         </TouchableOpacity>
 
-        {/* Back to Login */}
-        <TouchableOpacity  onPress={() => router.navigate('auth/login')} >
-          <Text className="text-blue-600 text-center">Back to Login</Text>
+        {/* Retour à la connexion */}
+        <TouchableOpacity onPress={() => router.navigate("auth/login")}>
+          <Text className="text-blue-600 text-center">Retour à la connexion</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

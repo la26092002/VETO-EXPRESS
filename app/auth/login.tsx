@@ -26,112 +26,30 @@ export default function LoginScreen() {
 
     const { state, dispatch } = useDataContext();
 
-    // Toggle password visibility
-    const togglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
+   // Basculer la visibilité du mot de passe
+const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+};
 
-    useEffect(() => {
-        const checkToken = async () => {
-            try {
-
-                const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
-                if (token) {
-                    // Setup headers with the token
-                    const headers = {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${token}`,
-                    };
-
-                    // Perform the API requests in parallel
-                    const [userRes, doctorsRes, vendeursRes] = await Promise.all([
-                        fetch(`${API.BASE_URL}${API.GET_USER}`, { headers }),
-                        fetch(`${API.BASE_URL}${API.GET_DOCTORS}`, { headers }),
-                        fetch(`${API.BASE_URL}${API.GET_VENDEURS}`, { headers }),
-                    ]);
-
-                    if (userRes.ok && doctorsRes.ok && vendeursRes.ok) {
-                        const userData = await userRes.json();
-                        const doctorsData = await doctorsRes.json();
-                        const vendeursData = await vendeursRes.json();
-
-                        dispatch({ type: "SET_USER", payload: userData });
-                        dispatch({ type: "SET_DOCTORS", payload: doctorsData.docteurs });
-                        dispatch({ type: "SET_VENDEURS", payload: vendeursData.vendeurs });
-
-                        router.navigate('/deliveryTo');
-                    } else {
-                        await AsyncStorage.removeItem(AsyncStorageValue.userToken);
-                    }
-
-                }
-            } catch (error) {
-                console.error('Error reading token:', error);
-            }
-        };
-
-        checkToken();
-    }, []);
-
-    // Handle registration
-    const handleLogin = async () => {
-        if (!email || !password) {
-            Alert.alert("Error", "All fields are required.");
-            return;
-        }
-
-        setIsLoading(true);
+useEffect(() => {
+    const checkToken = async () => {
         try {
-            const user = {
-                email: email,
-                password: password,
-            };
-
-            console.log(user)
-            const response = await fetch(`${API.BASE_URL}${API.LOGIN}`, { // Replace with your actual API endpoint
-                method: 'POST',
-                headers: {
+            const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
+            if (token) {
+                // Préparer les en-têtes avec le token
+                const headers = {
                     'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(user),
-            });
+                    Authorization: `Bearer ${token}`,
+                };
 
-            const data = await response.json();
+                // Exécuter les requêtes API en parallèle
+                const [userRes, doctorsRes, vendeursRes] = await Promise.all([
+                    fetch(`${API.BASE_URL}${API.GET_USER}`, { headers }),
+                    fetch(`${API.BASE_URL}${API.GET_DOCTORS}`, { headers }),
+                    fetch(`${API.BASE_URL}${API.GET_VENDEURS}`, { headers }),
+                ]);
 
-            console.log(data)
-            if (!response.ok) {
-                if (response.status === 400 && data.message === 'Email already in use') {
-                    Alert.alert("Registration Failed", "This email is already registered. Please use a different email or login.");
-                    await AsyncStorage.setItem('emailValidate', user.email);
-                    // Navigate to validation screen or home
-                    // router.navigate("auth/login");
-                } else if (response.status === 401) {
-                    Alert.alert("Registration Failed", "This password is not correct. Please use a different password.");
-                    await AsyncStorage.setItem('emailValidate', user.email);
-                    // Navigate to validation screen or home
-                    // router.navigate("auth/login");
-                } else {
-                    Alert.alert("Login Failed", data.message || "Login failed. Please try again.");
-                }
-                return;
-            }
-
-            if (data.user.isValidate) {
-                if (data.user.typeActeur === "Client") {
-                    await AsyncStorage.setItem(AsyncStorageValue.userToken, data.token);
-
-                    // Setup headers with the token
-                    const headers = {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${data.token}`,
-                    };
-
-                    // Perform the API requests in parallel
-                    const [userRes, doctorsRes, vendeursRes] = await Promise.all([
-                        fetch(`${API.BASE_URL}${API.GET_USER}`, { headers }),
-                        fetch(`${API.BASE_URL}${API.GET_DOCTORS}`, { headers }),
-                        fetch(`${API.BASE_URL}${API.GET_VENDEURS}`, { headers }),
-                    ]);
+                if (userRes.ok && doctorsRes.ok && vendeursRes.ok) {
                     const userData = await userRes.json();
                     const doctorsData = await doctorsRes.json();
                     const vendeursData = await vendeursRes.json();
@@ -140,28 +58,105 @@ export default function LoginScreen() {
                     dispatch({ type: "SET_DOCTORS", payload: doctorsData.docteurs });
                     dispatch({ type: "SET_VENDEURS", payload: vendeursData.vendeurs });
 
-
-                    router.navigate("/deliveryTo");
+                    router.navigate('auth/ChooseLocationScreen');
                 } else {
-                    Alert.alert(data.user.typeActeur, "this user just supported on web app service.");
+                    await AsyncStorage.removeItem(AsyncStorageValue.userToken);
                 }
-            } else {
-                Alert.alert("Login Not Complicated", "Validate your account.");
-
-                await AsyncStorage.setItem('emailValidate', user.email);
-                // Navigate to validation screen or home
-                router.navigate("auth/validateAccount");
             }
-            // Success case
-
-
         } catch (error) {
-            console.error('Registration error:', error);
-            Alert.alert("Registration Failed", "Network error. Please check your connection and try again.");
-        } finally {
-            setIsLoading(false);
+            console.error('Erreur lors de la lecture du token :', error);
         }
     };
+
+    checkToken();
+}, []);
+
+// Gérer la connexion
+const handleLogin = async () => {
+    if (!email || !password) {
+        Alert.alert("Erreur", "Tous les champs sont obligatoires.");
+        return;
+    }
+
+    setIsLoading(true);
+    try {
+        const user = {
+            email: email,
+            password: password,
+        };
+
+        console.log("Tentative de connexion avec :", user);
+
+        const response = await fetch(`${API.BASE_URL}${API.LOGIN}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        });
+
+        const data = await response.json();
+
+        console.log("Réponse de l'API :", data);
+
+        if (!response.ok) {
+            if (response.status === 400 && data.message === 'Email already in use') {
+                Alert.alert("Échec de l'inscription", "Cet e-mail est déjà enregistré. Veuillez en utiliser un autre ou vous connecter.");
+                await AsyncStorage.setItem('emailValidate', user.email);
+                // router.navigate("auth/login");
+            } else if (response.status === 401) {
+                Alert.alert("Échec de l'inscription", "Ce mot de passe est incorrect. Veuillez en utiliser un autre.");
+                await AsyncStorage.setItem('emailValidate', user.email);
+                // router.navigate("auth/login");
+            } else {
+                Alert.alert("Échec de la connexion", data.message || "Échec de la connexion. Veuillez réessayer.");
+            }
+            return;
+        }
+
+        if (data.user.isValidate) {
+            if (data.user.typeActeur === "Client") {
+                await AsyncStorage.setItem(AsyncStorageValue.userToken, data.token);
+
+                // Préparer les en-têtes avec le token
+                const headers = {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${data.token}`,
+                };
+
+                // Exécuter les requêtes API en parallèle
+                const [userRes, doctorsRes, vendeursRes] = await Promise.all([
+                    fetch(`${API.BASE_URL}${API.GET_USER}`, { headers }),
+                    fetch(`${API.BASE_URL}${API.GET_DOCTORS}`, { headers }),
+                    fetch(`${API.BASE_URL}${API.GET_VENDEURS}`, { headers }),
+                ]);
+
+                const userData = await userRes.json();
+                const doctorsData = await doctorsRes.json();
+                const vendeursData = await vendeursRes.json();
+
+                dispatch({ type: "SET_USER", payload: userData });
+                dispatch({ type: "SET_DOCTORS", payload: doctorsData.docteurs });
+                dispatch({ type: "SET_VENDEURS", payload: vendeursData.vendeurs });
+
+                router.navigate("/auth/ChooseLocationScreen");
+            } else {
+                Alert.alert(data.user.typeActeur, "Ce type d'utilisateur est uniquement pris en charge sur la version Web de l'application.");
+            }
+        } else {
+            Alert.alert("Connexion incomplète", "Veuillez valider votre compte.");
+            await AsyncStorage.setItem('emailValidate', user.email);
+            router.navigate("auth/validateAccount");
+        }
+
+    } catch (error) {
+        console.error("Erreur lors de l'inscription :", error);
+        Alert.alert("Échec de l'inscription", "Erreur réseau. Veuillez vérifier votre connexion et réessayer.");
+    } finally {
+        setIsLoading(false);
+    }
+};
+
 
     return (
         <SafeAreaView className="flex-1 bg-white">
@@ -169,23 +164,20 @@ export default function LoginScreen() {
 
             {/* Header with back button and title */}
             <View className="flex-row items-center justify-between px-4 py-3">
-                <TouchableOpacity>
-                    <Ionicons name="chevron-back" size={24} color="black" />
-                </TouchableOpacity>
-                <Text className="text-lg font-medium text-center flex-1">Login</Text>
+                <Text className="text-lg font-medium text-center flex-1">Connexion</Text>
                 <View className="w-6" />
             </View>
 
             {/* Login Section */}
             <View className="px-5 mt-4">
-                <Text className="text-3xl font-semibold text-gray-900">Welcome Back</Text>
+                <Text className="text-3xl font-semibold text-gray-900">Bon retour</Text>
                 <View className="flex-row items-center mt-1 mb-6 flex-wrap">
-                    <Text className="text-gray-500">Enter your Email and Password to login.</Text>
+                    <Text className="text-gray-500">Entrez votre e-mail et votre mot de passe pour vous connecter.</Text>
                 </View>
 
                 {/* Email Input */}
                 <View className="mb-5">
-                    <Text className="text-xs text-gray-400 mb-1">EMAIL ADDRESS</Text>
+                    <Text className="text-xs text-gray-400 mb-1">ADRESSE E-MAIL</Text>
                     <View className="flex-row items-center border-b border-gray-300 pb-2">
                         <TextInput
                             className="flex-1 text-base text-gray-800"
@@ -193,7 +185,7 @@ export default function LoginScreen() {
                             onChangeText={setEmail}
                             keyboardType="email-address"
                             autoCapitalize="none"
-                            placeholder="Enter your email"
+                            placeholder="Entrez votre e-mail"
                         />
                     </View>
                 </View>
@@ -201,7 +193,7 @@ export default function LoginScreen() {
                 {/* Password Input */}
                 <View className="mb-8">
                     <View className="flex flex-row items-center justify-between">
-                        <Text className="text-xs text-gray-400 mb-1">PASSWORD</Text>
+                        <Text className="text-xs text-gray-400 mb-1">MOT DE PASSE</Text>
                         <TouchableOpacity onPress={togglePasswordVisibility}>
                             <Ionicons name={showPassword ? "eye" : "eye-off"} size={20} color="#9ca3af" />
                         </TouchableOpacity>
@@ -212,7 +204,7 @@ export default function LoginScreen() {
                             value={password}
                             onChangeText={setPassword}
                             secureTextEntry={!showPassword}
-                            placeholder="Enter your password"
+                            placeholder="Entrez votre mot de passe"
                         />
                     </View>
                 </View>
@@ -221,24 +213,24 @@ export default function LoginScreen() {
                 <TouchableOpacity className="bg-blue-800 py-4 rounded-lg mb-4"
                     onPress={handleLogin}
                     disabled={isLoading}>
-                    <Text className="text-white text-center font-medium">LOGIN</Text>
+                    <Text className="text-white text-center font-medium">Connexion</Text>
                 </TouchableOpacity>
 
                 {/* Forgot Password */}
                 <TouchableOpacity onPress={() => router.navigate('auth/forgetPassword')}  >
-                    <Text className="text-blue-600 text-center mb-6">Forgot Password?</Text>
+                    <Text className="text-blue-600 text-center mb-6">Mot de passe oublié ?</Text>
                 </TouchableOpacity>
 
                 {/* Sign Up Link */}
                 <View className="flex-row justify-center">
-                    <Text className="text-gray-500">Don't have an account? </Text>
+                    <Text className="text-gray-500">Vous n'avez pas de compte ? </Text>
                     <TouchableOpacity onPress={() => router.navigate('auth/createAccount')}>
-                        <Text className="text-blue-600 font-medium">Sign Up</Text>
+                        <Text className="text-blue-600 font-medium">S'inscrire</Text>
                     </TouchableOpacity>
                 </View>
 
                 {/* Or Divider */}
-                <Text className="text-gray-500 text-center text-sm mb-6">Or</Text>
+                <Text className="text-gray-500 text-center text-sm mb-6">Ou</Text>
 
                 {/* Social Login Buttons */}
                 <TouchableOpacity className="flex-row bg-blue-600 py-3 rounded-lg mb-3 flex justify-around items-center">
@@ -249,7 +241,7 @@ export default function LoginScreen() {
                             resizeMode="cover"
                         />
                     </View>
-                    <Text className="text-white font-medium">CONNECT WITH FACEBOOK</Text>
+                    <Text className="text-white font-medium">SE CONNECTER AVEC FACEBOOK</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity className="flex-row bg-blue-500 py-3 rounded-lg flex justify-around items-center">
@@ -260,7 +252,7 @@ export default function LoginScreen() {
                             resizeMode="cover"
                         />
                     </View>
-                    <Text className="text-white font-medium">CONNECT WITH GOOGLE</Text>
+                    <Text className="text-white font-medium">SE CONNECTER AVEC GOOGLE</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>

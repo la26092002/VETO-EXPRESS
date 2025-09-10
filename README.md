@@ -1,50 +1,45 @@
-# Welcome to your Expo app 👋
+# 🐾 VETO-EXPRESS
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**VETO-EXPRESS** is a mobile and web platform that connects pet owners with veterinarians and veterinary product stores.  
+It allows users to **book veterinary consultations**, **purchase animal products**, and **manage their shopping cart** directly from the app.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
 
-   ```bash
-   npm install
-   ```
+- 📅 Book appointments with veterinarians  
+- 🛒 Browse and purchase veterinary products (animal food, medicines, accessories, etc.)  
+- 🔎 Search and filter products by type  
+- 🧺 Add products to cart and manage quantities  
+- 👨‍⚕️ Connect with veterinarians for online/offline consultations  
+- 🔐 Secure authentication with JWT tokens  
 
-2. Start the app
+---
 
-   ```bash
-    npx expo start
-   ```
+## 📱 Screenshots
 
-In the output, you'll find options to open the app in a
+<p align="center">
+  <img src="./assets/screenshots/home.png" alt="Home Screen" width="250"/>
+  <img src="./assets/screenshots/products.png" alt="Products Screen" width="250"/>
+  <img src="./assets/screenshots/cart.png" alt="Cart Screen" width="250"/>
+</p>
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+> 👉 Place your screenshots in `assets/screenshots/` folder and update the file names above.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+---
 
-## Get a fresh project
+## 🛠️ Tech Stack
 
-When you're ready, run:
+- **Frontend (Mobile & Web):** React Native + Expo + NativeWind  
+- **Backend:** Express.js / Node.js  
+- **Database:** MongoDB  
+- **Auth:** JWT  
 
+---
+
+## ⚙️ Installation
+
+### 1️⃣ Clone the repository
 ```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+git clone https://github.com/your-username/veto-express.git
+cd veto-express

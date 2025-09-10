@@ -27,6 +27,9 @@ It allows users to **book veterinary consultations**, **purchase animal products
   <img src="./assets/screenshots/image6.jpeg" alt="Historique Screen" width="250"/>
   <img src="./assets/screenshots/image7.jpeg" alt="Achats Screen" width="250"/>
   <img src="./assets/screenshots/image8.jpeg" alt="Settings Screen" width="250"/>
+  <img src="./assets/screenshots/image15.jpeg" alt="Settings Screen" width="250"/>
+  <img src="./assets/screenshots/image16.jpeg" alt="Settings Screen" width="250"/>
+
   <img src="./assets/screenshots/image9.jpeg" alt="Select Service Screen" width="250"/>
   <img src="./assets/screenshots/image10.jpeg" alt="Details Service Consultation Screen" width="250"/>
   <img src="./assets/screenshots/image11.jpeg" alt="Details Service Screen" width="250"/>
@@ -44,7 +47,7 @@ It allows users to **book veterinary consultations**, **purchase animal products
 
 - **Frontend (Mobile & Web):** React Native + Expo + NativeWind  
 - **Backend:** Express.js / Node.js  
-- **Database:** MongoDB  
+- **Database:** Mysql  
 - **Auth:** JWT  
 
 ---

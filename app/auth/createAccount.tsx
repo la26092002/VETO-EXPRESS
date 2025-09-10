@@ -183,7 +183,7 @@ export default function CreateAccountScreen() {
         <Text className="text-gray-500 text-center text-sm mb-6">
           En vous inscrivant, vous acceptez nos Conditions Générales et notre Politique de Confidentialité.
         </Text>
-
+{/*
         <Text className="text-gray-500 text-center text-sm mb-6">Ou</Text>
 
         <TouchableOpacity className="flex-row bg-blue-600 py-3 rounded-lg mb-3 flex justify-around items-center">
@@ -207,6 +207,9 @@ export default function CreateAccountScreen() {
           </View>
           <Text className="text-white font-medium">SE CONNECTER AVEC GOOGLE</Text>
         </TouchableOpacity>
+
+
+        */}
       </View>
     </SafeAreaView>
   );

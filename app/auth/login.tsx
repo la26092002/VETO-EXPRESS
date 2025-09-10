@@ -229,10 +229,10 @@ const handleLogin = async () => {
                     </TouchableOpacity>
                 </View>
 
-                {/* Or Divider */}
+                {/*
                 <Text className="text-gray-500 text-center text-sm mb-6">Ou</Text>
 
-                {/* Social Login Buttons */}
+                 Social Login Buttons 
                 <TouchableOpacity className="flex-row bg-blue-600 py-3 rounded-lg mb-3 flex justify-around items-center">
                     <View className="bg-white p-1 rounded-sm mr-2">
                         <Image
@@ -254,6 +254,8 @@ const handleLogin = async () => {
                     </View>
                     <Text className="text-white font-medium">SE CONNECTER AVEC GOOGLE</Text>
                 </TouchableOpacity>
+
+                */}
             </View>
         </SafeAreaView>
     );

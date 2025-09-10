@@ -101,6 +101,22 @@ export default function ServiceConsultationDetails() {
       ),
     },
     { label: "Service", value: consultation?.type },
+     { 
+    label: "Date Rdv", 
+    value: consultation?.dateRdv 
+      ? new Date(consultation.dateRdv).toLocaleString("fr-FR", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      : "Non défini",
+  },
+    
+    
+    
     { label: "Statut", value: consultation?.status },
     { label: "Livraison", value: consultation?.ServiceLivraisonPar },
     { label: "Animal", value: consultation.pet?.petName },
@@ -163,15 +179,6 @@ export default function ServiceConsultationDetails() {
           >
             <Text className="text-white text-center font-semibold text-base">
               Ouvrir dans Google Maps
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => router.push("/veto-map")} // Remplace avec ta vraie route interne
-            className="bg-blue-600 py-4 rounded-lg"
-          >
-            <Text className="text-white text-center font-semibold text-base">
-              Voir sur la carte Veto Express
             </Text>
           </TouchableOpacity>
         </View>

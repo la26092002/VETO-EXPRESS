@@ -49,7 +49,7 @@ export const ServiceLivraisonPar = Object.freeze({
 type ServiceLivraisonParType = keyof typeof ServiceLivraisonPar;
 
 export const API = Object.freeze({
-    BASE_URL:  "http://35.181.18.120:3000",
+    BASE_URL:  "https://api.vetoexpress.pharmamoov.fr",
     LOGIN: "/api/auth/login",
     REGISTER: "/api/auth/register",
     GET_DOCTORS: "/api/client/getDocteurs",

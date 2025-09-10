@@ -1,78 +1,96 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  Dimensions,
-  Alert,
   ActivityIndicator,
-  Platform,
+  Alert,
+  StyleSheet,
 } from "react-native";
 import MapView, { Marker, Region } from "react-native-maps";
 import * as Location from "expo-location";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import Constants from "expo-constants";
-import { API, AsyncStorageValue } from "@/constants/Backend";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-import "react-native-get-random-values";
+import { Ionicons } from "@expo/vector-icons";
+import { router } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API, AsyncStorageValue } from "@/constants/Backend";
 import { useDataContext } from "@/context/DataContext";
 
-
-const { width, height } = Dimensions.get("window");
-
 export default function SelectLocationScreen() {
-  const { state, dispatch } = useDataContext();
+  const [region, setRegion] = useState<Region | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState<string>("");
 
-  const [region, setRegion] = useState<Region>({
-    latitude: 36.75, // Default: Algiers
-    longitude: 3.06,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
-  });
+  const { dispatch } = useDataContext();
 
-  const [loading, setLoading] = useState(false);
-  const mapRef = useRef<MapView>(null);
+  // 📍 Get current location and center map
+  useEffect(() => {
+    (async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          Alert.alert("Permission refusée", "La permission de localisation est nécessaire.");
+          setLoading(false);
+          return;
+        }
 
-  const handleRegionChange = (newRegion: Region) => {
+        const location = await Location.getCurrentPositionAsync({});
+        const { latitude, longitude } = location.coords;
+
+        setRegion({
+          latitude,
+          longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        });
+
+        // First reverse geocode
+        const geocode = await Location.reverseGeocodeAsync({ latitude, longitude });
+        const firstAddress = geocode[0];
+        setSelectedAddress(
+          firstAddress
+            ? `${firstAddress.name}, ${firstAddress.street}, ${firstAddress.city}, ${firstAddress.region}, ${firstAddress.country}`
+            : "Adresse inconnue"
+        );
+      } catch (err) {
+        console.error("Erreur localisation:", err);
+        Alert.alert("Erreur", "Impossible d'obtenir votre position.");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  // 🔁 Update address when region changes
+  const onRegionChangeComplete = async (newRegion: Region) => {
     setRegion(newRegion);
+    try {
+      const geocode = await Location.reverseGeocodeAsync({
+        latitude: newRegion.latitude,
+        longitude: newRegion.longitude,
+      });
+      const firstAddress = geocode[0];
+      setSelectedAddress(
+        firstAddress
+          ? `${firstAddress.name}, ${firstAddress.street}, ${firstAddress.city}, ${firstAddress.region}, ${firstAddress.country}`
+          : "Adresse inconnue"
+      );
+    } catch (error) {
+      console.error("Erreur reverse geocode:", error);
+    }
   };
 
-  const handleSaveLocation = async () => {
+  // 💾 Save selected location
+  const saveLocation = async () => {
+    if (!region) return;
     try {
-      setLoading(true);
-      const geocode = await Location.reverseGeocodeAsync({
-        latitude: region.latitude,
-        longitude: region.longitude,
-      });
-      
-      const firstAddress = geocode[0];
-      if (!firstAddress) {
-        Alert.alert("Erreur", "Adresse introuvable pour cette position.");
-        setLoading(false);
-        return;
-      }
-      
-      const adresseMap = `${firstAddress.name || ""}, ${firstAddress.street || ""}, ${firstAddress.city || ""}, ${firstAddress.region || ""}, ${firstAddress.country || ""}`;
-      console.log({
-        latitude:region.latitude,
-        longitude:region.longitude,
-        adresseMap
-      })
-
-      if (!adresseMap) {
-        Alert.alert("Erreur", "L'adresse est invalide.");
-        setLoading(false);
-        return;
-      }
-      
+      setSaving(true);
 
       const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
       if (!token) {
         Alert.alert("Erreur", "Token manquant. Veuillez vous reconnecter.");
-        setLoading(false);
+        setSaving(false);
         return;
       }
 
@@ -85,130 +103,104 @@ export default function SelectLocationScreen() {
         body: JSON.stringify({
           userLatitude: region.latitude,
           userLongitude: region.longitude,
-          adresseMap:adresseMap,
+          adresseMap: selectedAddress,
         }),
       });
 
       if (response.ok) {
-       
-
         dispatch({
-          type: 'UPDATE_USER',
+          type: "UPDATE_USER",
           payload: {
             userLatitude: region.latitude,
             userLongitude: region.longitude,
-            adresseMap:adresseMap,
+            adresseMap: selectedAddress,
           },
         });
-        Alert.alert("Succès", "Votre position a été enregistrée.");
-
-
-        console.log("-----------------")
-        console.log(state)
+        Alert.alert("Succès", "Votre position a été mise à jour.");
         router.replace("/deliveryTo");
       } else {
         const data = await response.json();
-        Alert.alert("Erreur", data.message || "Une erreur s'est produite.");
+        Alert.alert("Erreur", data.message || "Impossible d'enregistrer la position.");
       }
     } catch (error) {
-      console.error("Erreur:", error);
-      Alert.alert("Erreur", "Impossible de sauvegarder votre position.");
+      console.error("Erreur enregistrement:", error);
+      Alert.alert("Erreur", "Impossible d'enregistrer la position.");
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
+  if (loading || !region) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#000" />
+      </View>
+    );
+  }
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView style={styles.container}>
       {/* Header */}
-      <View className="flex-row items-center justify-between px-4 py-3">
+      <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="text-lg font-medium text-center flex-1">
-          Choisir une autre adresse
-        </Text>
-        <View className="w-6" />
-      </View>
-
-      {/* Controlled Search Bar */}
-      <View className="px-4 pt-2">
-        <GooglePlacesAutocomplete
-          placeholder="Rechercher une adresse..."
-          fetchDetails={true}
-          onPress={(data, details = null) => {
-            if (details) {
-              const loc = details.geometry.location;
-              const newRegion = {
-                latitude: loc.lat,
-                longitude: loc.lng,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              };
-              setRegion(newRegion);
-              mapRef.current?.animateToRegion(newRegion, 1000);
-            }
-          }}
-          query={{
-            key:
-              Constants.expoConfig?.extra?.googleMapsApiKey ||
-              Platform.select({
-                ios: Constants.expoConfig?.ios?.config?.googleMapsApiKey,
-                android:
-                  Constants.expoConfig?.android?.config?.googleMaps?.apiKey,
-              }),
-            language: "fr",
-          }}
-          styles={{
-            container: { flex: 0 },
-            textInputContainer: {
-              backgroundColor: "white",
-              borderRadius: 8,
-              paddingHorizontal: 4,
-              shadowColor: "#000",
-              shadowOpacity: 0.1,
-              shadowOffset: { width: 0, height: 2 },
-              shadowRadius: 4,
-              elevation: 5,
-            },
-            textInput: {
-              height: 44,
-              color: "#333",
-              fontSize: 16,
-            },
-          }}
-        />
+        <Text style={styles.headerTitle}>Choisir une adresse</Text>
+        <View style={{ width: 24 }} />
       </View>
 
       {/* Map */}
-      <View className="flex-1 mt-2">
-        <MapView
-          ref={mapRef}
-          style={{ flex: 1 }}
-          initialRegion={region}
-          onRegionChangeComplete={handleRegionChange}
-        >
-          <Marker coordinate={region} draggable />
-        </MapView>
-      </View>
+      <MapView
+        style={styles.map}
+        initialRegion={region}
+        onRegionChangeComplete={onRegionChangeComplete}
+      >
+        <Marker coordinate={{ latitude: region.latitude, longitude: region.longitude }} />
+      </MapView>
 
-      {/* Button */}
-      <View className="p-5">
+      {/* Bottom panel */}
+      <View style={styles.bottomPanel}>
+        <Text style={styles.address}>{selectedAddress}</Text>
         <TouchableOpacity
-          className="bg-blue-800 py-4 rounded-lg"
-          onPress={handleSaveLocation}
-          disabled={loading}
+          style={styles.saveButton}
+          onPress={saveLocation}
+          disabled={saving}
         >
-          {loading ? (
+          {saving ? (
             <ActivityIndicator color="#fff" />
           ) : (
-            <Text className="text-white text-center font-medium">
-              Enregistrer cette position
-            </Text>
+            <Text style={styles.saveText}>Confirmer cette adresse</Text>
           )}
         </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: "white" },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: 12,
+    borderBottomWidth: 1,
+    borderColor: "#ddd",
+  },
+  headerTitle: { fontSize: 18, fontWeight: "600" },
+  map: { flex: 1 },
+  bottomPanel: {
+    padding: 16,
+    borderTopWidth: 1,
+    borderColor: "#ddd",
+    backgroundColor: "#fff",
+  },
+  address: { fontSize: 16, marginBottom: 12, textAlign: "center" },
+  saveButton: {
+    backgroundColor: "#1E40AF",
+    paddingVertical: 14,
+    borderRadius: 8,
+  },
+  saveText: { color: "#fff", textAlign: "center", fontWeight: "600" },
+  center: { flex: 1, justifyContent: "center", alignItems: "center" },
+});

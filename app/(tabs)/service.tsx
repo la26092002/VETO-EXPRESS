@@ -15,24 +15,6 @@ const services = [
     location: "topServiceDoctor",
   },
   {
-    id: 2,
-    name: ServiceType.ConsultationSuivi,
-    image: require("@/assets/images/photo_2.jpg"),
-    location: "topServiceDoctor",
-  },
-  {
-    id: 3,
-    name: ServiceType.RdvRapide,
-    image: require("@/assets/images/photo_3.jpg"),
-    location: "topServiceDoctor",
-  },
-  {
-    id: 4,
-    name: ServiceVenteType.ProduitVeterinaire,
-    image: require("@/assets/images/photo_4.jpg"),
-    location: "topServiceVendeur",
-  },
-  {
     id: 5,
     name: ServiceVenteType.ProduitAnimalerie,
     image: require("@/assets/images/photo_5.jpg"),

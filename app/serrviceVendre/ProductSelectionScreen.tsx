@@ -1,4 +1,4 @@
-import { API, AsyncStorageValue, ProductType } from "@/constants/Backend";
+import { API, AsyncStorageValue, ProductType, ServiceVenteType } from "@/constants/Backend";
 import { useDataContext } from "@/context/DataContext";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -16,10 +16,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-const API_BASE_URL = "http://192.168.1.12:3000";
+const API_BASE_URL = API.BASE_URL;
 const IMAGE_BASE_URL = `${API_BASE_URL}/`;
 
 export default function ProductScreen() {
+  
+
+  const [selectedService, setSelectedService] = useState(
+    ServiceVenteType.ProduitAnimalerie
+  );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
   const [products, setProducts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [quantities, setQuantities] = useState({});
@@ -32,10 +39,8 @@ export default function ProductScreen() {
   const { state, dispatch } = useDataContext();
 
   useEffect(() => {
-
-    console.log(state.serviceVendeurSelectioner?.type)
-
-  }, [])
+    console.log(selectedService);
+  }, [selectedService]);
   const fetchProducts = async (currentPage = 1, append = false) => {
     const userId = state.serviceVendeurSelectioner?.vendeurId;
     const token = await AsyncStorage.getItem(AsyncStorageValue.userToken);
@@ -50,7 +55,7 @@ export default function ProductScreen() {
       else setLoadingMore(true);
 
       const response = await fetch(
-        `${API.BASE_URL}/api/client/afficherProduitParUser?userId=${userId}&page=${currentPage}&size=${size}&productType=${state.serviceVendeurSelectioner?.type}`,
+        `${API.BASE_URL}/api/client/afficherProduitParUser?userId=${userId}&page=${currentPage}&size=${size}&productType=${selectedService}`,
         {
           method: "GET",
           headers: {
@@ -94,7 +99,7 @@ export default function ProductScreen() {
 
   useEffect(() => {
     fetchProducts(1, false);
-  }, []);
+  }, [selectedService]);
 
   const handleQuantityChange = (productId, change) => {
     setQuantities((prev) => {
@@ -121,8 +126,6 @@ export default function ProductScreen() {
         });
         alert(`Ajouté ${quantity} x ${product.name} au panier`);
         setQuantities((prev) => ({ ...prev, [productId]: 0 }));
-
-
       }
     } else {
       alert("Veuillez sélectionner une quantité");
@@ -149,34 +152,69 @@ export default function ProductScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="chevron-back" size={24} color="black" />
         </TouchableOpacity>
-        <Text className="text-lg font-medium text-center flex-1">{state.serviceVendeurSelectioner?.type}</Text>
+        <Text className="text-lg font-medium text-center flex-1">
+          {state.serviceVendeurSelectioner?.type}
+        </Text>
         <View className="w-6" />
       </View>
       <View className="flex-row justify-between items-center my-4">
-        <Text className="text-2xl font-semibold text-gray-800">Produits</Text>
+        {/* Dropdown Type de produit */}
+        <View className="mt-3">
+          <TouchableOpacity
+            onPress={() => setIsDropdownOpen(true)}
+            className="border border-gray-300 rounded-lg px-4 py-2 bg-white"
+          >
+            <Text className="text-gray-800">{selectedService}</Text>
+          </TouchableOpacity>
+
+          {/* Modal Dropdown */}
+          {isDropdownOpen && (
+            <View className="absolute top-14 left-0 right-0 bg-white border border-gray-300 rounded-lg z-50">
+              {Object.values(ServiceVenteType).map((label) => (
+                <TouchableOpacity
+                  key={label}
+                  onPress={() => {
+                    setSelectedService(label);
+                    setIsDropdownOpen(false);
+                  }}
+                  className="px-4 py-2 border-b border-gray-200"
+                >
+                  <Text className="text-gray-700">{label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+        </View>
+
         <TouchableOpacity
           onPress={() => {
             // navigate to the Panier screen here
             console.log("Go to Panier");
-            console.log(state.serviceVendeurSelectioner?.products)
+            console.log(state.serviceVendeurSelectioner?.products);
             router.push("serrviceVendre/PanierScreen");
           }}
           style={{ backgroundColor: "#B2F5EA" }}
           className="bg-amber-500 px-4 py-2 rounded-lg"
         >
-          <Text style={{ color: "#1F2937" }} className="text-white font-semibold">Panier</Text>
+          <Text
+            style={{ color: "#1F2937" }}
+            className="text-white font-semibold"
+          >
+            Panier
+          </Text>
         </TouchableOpacity>
       </View>
 
-
       <View className="bg-gray-100 rounded-lg px-4 py-2 mb-4">
-        <TextInput
-          placeholder="Rechercher un produit..."
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          className="text-base text-gray-700"
-        />
-      </View>
+  <TextInput
+    placeholder="Rechercher un produit..."
+    placeholderTextColor="#9CA3AF"   // gray-400
+    value={searchQuery}
+    onChangeText={setSearchQuery}
+    className="text-base text-gray-700"
+  />
+</View>
+
 
       {loading ? (
         <View className="flex-1 justify-center items-center">

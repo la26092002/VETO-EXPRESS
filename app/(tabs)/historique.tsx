@@ -32,7 +32,7 @@ const HistoriqueScreen = () => {
 
     setLoading(true);
     try {
-      const URL = `http://35.181.18.120:3000/api/client/afficherServiceVenteClient`;
+      const URL = `${API.BASE_URL}/api/client/afficherServiceVenteClient`;
       const TOKEN = await AsyncStorage.getItem(AsyncStorageValue.userToken);
       const res = await fetch(`${URL}?page=${achatPage}&limit=${limit}`, {
         headers: {

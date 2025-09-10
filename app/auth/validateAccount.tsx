@@ -11,6 +11,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API } from "@/constants/Backend";
 
 export default function ValidateAccountScreen() {
   const [code, setCode] = useState("");
@@ -23,7 +24,7 @@ export default function ValidateAccountScreen() {
         const email = await AsyncStorage.getItem("emailValidate");
 
         if (email) {
-          const response = await fetch("http://35.181.18.120:3000/api/auth/send-validation-code", {
+          const response = await fetch(`${API.BASE_URL}/api/auth/send-validation-code`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -55,7 +56,7 @@ export default function ValidateAccountScreen() {
 
   const handleValidateAccount = async () => {
     try {
-      const response = await fetch("http://35.181.18.120:3000/api/auth/validate-account", {
+      const response = await fetch(`${API.BASE_URL}/api/auth/validate-account`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -180,13 +180,16 @@ export default function TabLayout() {
     >
       <Tabs.Screen
         name="deliveryTo"
+        
         options={{
+           tabBarLabel: "Accueil",
           tabBarIcon: ({ focused, color }) => <HomeIcon focused={focused} color={color} />,
         }}
       />
       <Tabs.Screen
         name="service"
         options={{
+          tabBarLabel: "Service",
           tabBarIcon: ({ focused, color }) => <SearchIcon focused={focused} color={color} />,
         }}
       />
@@ -194,6 +197,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="historique"
         options={{
+          tabBarLabel: "Historique",
           tabBarIcon: ({ focused, color }) => <ServiceIcon focused={focused} color={color} />,
         }}
       />
@@ -201,6 +205,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="accountSetting"
         options={{
+          tabBarLabel: "Parametres",
           tabBarIcon: ({ focused, color }) => <ProfileIcon focused={focused} color={color} />,
         }}
       />
